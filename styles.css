@@ -38,6 +38,8 @@ h1 {
 
 }
 
+
+
 div {
     height:100px;
 
@@ -47,6 +49,7 @@ div {
     line-height: 100px;
     font-family: 'Open Sans Condensed', sans-serif;
     font-size: 28px;
+
 }
 
 
@@ -85,6 +88,7 @@ div {
 
 
 div:hover {
+    cursor:pointer;
     background-color:rgb(210, 210, 210);
 }
 
