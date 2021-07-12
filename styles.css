@@ -1,0 +1,159 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: 0;
+    background:rgb(42, 42, 42);
+
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+
+section {
+
+    display: grid;
+    grid-gap:10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 470px;
+    
+}
+
+.screen {
+    text-align: right;
+    line-height:6px;
+    background: rgb(42, 42, 42);
+    color:white;
+    grid-column: span 4;
+
+    height: 120px;
+}
+
+h1 {
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 72px;
+    margin-right: 5%;
+
+}
+
+div {
+    height:100px;
+
+    background: rgb(181, 181, 181);
+    border-radius: 120px;
+    text-align: center;
+    line-height: 100px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 28px;
+}
+
+
+
+.zero {
+    grid-column: span 2;
+
+}
+
+
+.divide, .multiply, .minus, .plus, .equals {
+    background:rgb(248, 101, 16);
+}
+
+
+.divide:hover, .multiply:hover, .minus:hover, .plus:hover, .equals:hover {
+    background:rgb(237, 124, 58);
+    cursor: pointer;
+}
+
+.screen:hover{
+    background:rgb(42, 42, 42);
+}
+
+
+
+
+.backspace {
+    background-image: url("backspace.svg");
+    background-size: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-indent: -99999px;
+}
+
+
+
+div:hover {
+    background-color:rgb(210, 210, 210);
+}
+
+@media only screen and (min-width:900px) {
+
+    div {
+        height:110px;
+        line-height: 110px;
+    }
+}
+
+
+@media only screen and (max-width:400px) {
+    .screen{
+        
+        height:100px;
+    }
+
+    h1 {
+        font-size: 55px;
+    }
+    div {
+        height:70px;
+        line-height: 70px;
+    }
+}
+
+
+@media only screen and (max-width: 280px){
+    .screen {
+ 
+        height:60px;
+        line-height: 1px;
+    }
+    h1 {
+        font-size: 48px;
+    }
+    div {
+        height:50px;
+        line-height: 50px;
+        border-radius: 100px;
+        
+    }
+}
+@media only screen and (max-width: 226px){
+    .screen {
+      
+        line-height: 10px;
+    }
+    h1 {
+        font-size: 28px;
+    }
+    div {   
+        font-size: 18px;
+    }
+    .backspace {
+        background-size: 18px;
+    }
+}
+
+@media only screen and (max-width: 200px){
+    div {   
+        height:30px;
+        line-height: 30px;
+    }
+}
+
+@media only screen and (max-width: 140px){
+    h1 {
+        font-size:20px;
+    }
+}
