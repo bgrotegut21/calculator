@@ -18,8 +18,12 @@ let zero = document.querySelector(".zero");
 let decimal = document.querySelector(".decimal");
 let equals = document.querySelector(".equals");
 let screenText = document.querySelector(".screen-text")
+
 let canAddNumber = true
-let additionNumbers = [];
+let showAnwser = false;
+let type = ""
+
+let numbersArray = [Number(screenText.textContent)]
 
 function checkLength(){
     if(screenText.textContent.length == 12) canAddNumber = false;
@@ -28,22 +32,50 @@ function checkLength(){
 
 function clearScreen () {
     screenText.textContent = "";
+    numbersArray = [];
 }
 
+function addition(){
+    if (numbersArray.length != 2) {
+        numbersArray.push(Number(screenText.textContent));
+        showAnwser = true;
+    }
+
+    if(numbersArray.length == 2) {
+        let anwser = numbersArray[0] + numbersArray[1];
+        screenText.textContent = anwser;
+        numbersArray = [anwser];
+    }
+}
+
+function operator(){
+
+    if (numbersArray.length != 2) {
+        numbersArray.push(Number(screenText.textContent));
+        showAnwser = true;
+    } 
+    
+}
+
+
+
+
+
+
 function addDecimal(){  
+    if (showAnwser){
+        screenText.textContent = "";
+        showAnwser = false;
+    }
     isDecimal = /\./.test(screenText.textContent)
     if(!isDecimal) screenText.textContent += "."; 
 }
 
 function deleteText(){
+    if (showAnwser) screenText.textContent = "";
+
     screenLength = screenText.textContent.length;
     screenText.textContent = screenText.textContent.slice(0, screenLength-1);
-}
-function operatorNumbers(number){
-    
-}
-function addition(number){
-    additionNumbers.push(number);
 }
 
 let systemButtons = [{button:clear,execute: clearScreen},
@@ -57,18 +89,35 @@ let numberButtons = [{button:one,number:1},{button:two,number:2},
                     {button:seven,number:7},{button:eight,number:8},
                     {button:nine,number:9}, {button: zero, number: 0}];
 
+let operateButtons = [{button:plus, execute: addition}, {button:equals, execute: operator}]
+
+                    
 numberButtons.map(numberButton => {
     numberButton.button.addEventListener("click", () => {
         if(canAddNumber){
+            if (showAnwser){
+                screenText.textContent = "";
+                showAnwser = false;
+            }
             screenText.textContent += numberButton.number;
+            numbersArray[0] = Number(screenText.textContent);
+            console.log(numbersArray)
+
+
         }
         checkLength();
     })
 })
 
-systemButtons.map(systemButton => {
-    systemButton.button.addEventListener("click", () => {
-        systemButton.execute();
+function executeButtons(buttn){
+    buttn.map(calcButton => {
+        calcButton.button.addEventListener("click", () => {
+            calcButton.execute();
+        })
     })
-})
+    
+}
+
+executeButtons(systemButtons);
+executeButtons(operateButtons)
 

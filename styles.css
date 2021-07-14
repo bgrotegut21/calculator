@@ -71,6 +71,7 @@ div {
 }
 
 .screen:hover{
+    cursor:default;
     background:rgb(42, 42, 42);
 }
 
