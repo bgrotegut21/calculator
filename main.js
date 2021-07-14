@@ -20,10 +20,10 @@ let equals = document.querySelector(".equals");
 let screenText = document.querySelector(".screen-text")
 
 let canAddNumber = true
-let showAnwser = false;
 let type = ""
+let showAnwser = true;
 
-let numbersArray = [Number(screenText.textContent)]
+let numbersArray = [];
 
 function checkLength(){
     if(screenText.textContent.length == 12) canAddNumber = false;
@@ -36,30 +36,23 @@ function clearScreen () {
 }
 
 function addition(){
-    if (numbersArray.length != 2) {
+    if (numbersArray != 2){
         numbersArray.push(Number(screenText.textContent));
-        showAnwser = true;
+        showAnwser = true
     }
 
-    if(numbersArray.length == 2) {
+
+    if (numbersArray.length == 2){
         let anwser = numbersArray[0] + numbersArray[1];
+        
         screenText.textContent = anwser;
-        numbersArray = [anwser];
+        numbersArray = [anwser]
+
     }
 }
 
-function operator(){
 
-    if (numbersArray.length != 2) {
-        numbersArray.push(Number(screenText.textContent));
-        showAnwser = true;
-    } 
-    
-}
-
-
-
-
+function operator () {}
 
 
 function addDecimal(){  
@@ -100,10 +93,7 @@ numberButtons.map(numberButton => {
                 showAnwser = false;
             }
             screenText.textContent += numberButton.number;
-            numbersArray[0] = Number(screenText.textContent);
             console.log(numbersArray)
-
-
         }
         checkLength();
     })
