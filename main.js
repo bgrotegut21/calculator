@@ -22,159 +22,227 @@ let screenText = document.querySelector(".screen-text")
 let canAddNumber = true
 let type = ""
 let showAnwser = true;
+let canEdit = true
 
-let numbersArray = [];
+let expressionString = "0"
 
-function checkLength(){
-    if(screenText.textContent.length == 12) canAddNumber = false;
-    else canAddNumber = true;
+
+
+
+function clearScreen(){
+    expressionString = "0";
+    screenText.textContent = expressionString;
 }
 
-function clearScreen () {
-    screenText.textContent = 0;
-    showAnwser = true;
-    numbersArray = [];
-}
 
 
-function pushNumbers(type){
-    if (showAnwser) return;
-    let expression;
-    if (numbersArray.length < 1){
-        expression = {number: screenText.textContent, operation:type}
+function addOperator(operator){
+    let fixedOperator = false;
+    let swapOperator;
+    if(expressionString.includes(operator)){
+        evaluateExprssion(expressionString);
     } else {
-        numbersArray.map(value => {
-            if (value.operation != "none"){
-                expression = {number: screenText.textContent, operation:"none"}
-            } else {
-                console.log(type)
-                expression = {number: screenText.textContent, operation:type}
-            }
-        })
+        for (let value of expressionString){
+           if(value == "+"| value =="*"| value =="/") fixedOperator = true;
+           if (value == "+")  swapOperator = expressionString.replace(/\+/g, operator);
+           if (value == "*")  swapOperator = expressionString.replace(/\*/g, operator);
+           if (value == "/")  swapOperator = expressionString.replace(/\//g, operator);
+
+        }
+
+        if(fixedOperator){
+            expressionString = swapOperator;
+            screenText.textContent = expressionString;
+        } else {
+            expressionString += operator;
+        }
+
+
+
     }
-
-    numbersArray.push(expression);
-    showAnwser = true;
-    screenText.textContent = "";
-    operator();    
-
+    screenText.textContent = expressionString;
 }
 
-
-
-
-
-
-
-function evaluateExpression(array){
-
+function addition(numbers){
+    addOperator = false;
     let anwser = 0;
-
-    array.map (value => {
-        console.log(value)
-        if (value.operation == "addition"){
-
-            anwser = Number(numbersArray[0].number) + Number(numbersArray[1].number);
-            
-            
+    numbers.map(value => {
+        if (value == ""){
+            addOperator = true;
+            value = 0;
         }
-        if (value.operation == "multiply"){
-             anwser = Number(numbersArray[0].number) * Number(numbersArray[1].number);
-        }
-
-
+        anwser += Number(value);
     })
-    let finalAnwser = {number: anwser, operation: "none"};
-    console.log(finalAnwser);
-    numbersArray = [finalAnwser]
 
-
-    screenText.textContent = finalAnwser.number;
-    if (screenText.textContent.length > 12){
-        let number = Number(screenText.textContent);
-        let roundedNumber = number.toExponential(8);
-        screenText.textContent = roundedNumber;
-    }
-}
-
-
-
-function operator () {
-    console.log(numbersArray)
-    if(numbersArray.length  < 1) return;
-    if (numbersArray.length != 2){
-        let expression = {number: Number(screenText.textContent), operation: "none"}
-        numbersArray.push(expression)
-    }
-    if (numbersArray.length == 2){
-        evaluateExpression(numbersArray)
-    }
-
-}
-
-
-function addDecimal(){  
-    if (showAnwser){
-        screenText.textContent = "";
-        showAnwser = false;
-    }
-    isDecimal = /\./.test(screenText.textContent)
-    if(!isDecimal) screenText.textContent += "."; 
-}
-
-function deleteText(){
-    if (showAnwser) screenText.textContent = "";
-
-    screenLength = screenText.textContent.length;
-    screenText.textContent = screenText.textContent.slice(0, screenLength-1);
-}
-
-let systemButtons = [{button:clear,execute: clearScreen},
-                     {button:backspace, execute: deleteText},
-                     {button:decimal, execute: addDecimal}                   
-]
-
-let numberButtons = [{button:one,number:1},{button:two,number:2},
-                     {button:three,number:3},{button:four,number:4},
-                    {button:five,number:5},{button:six,number:6},
-                    {button:seven,number:7},{button:eight,number:8},
-                    {button:nine,number:9}, {button: zero, number: 0}];
-
-let operateButtons = [{button:plus, execute: pushNumbers, type: "addition"}, {button:equals, execute: operator},
-                      {button:multiply, execute: pushNumbers, type: "multiply"}
-
-
-]
-
-                    
-numberButtons.map(numberButton => {
-    numberButton.button.addEventListener("click", () => {
-        checkLength();
-        if(canAddNumber){
-            if (showAnwser){
-                screenText.textContent = "";
-
-                showAnwser = false;
-            }
-            screenText.textContent += numberButton.number;
-
-            
-        }
-    })
-})
-
-function executeButtons(buttn){
-    buttn.map(calcButton => {
-        calcButton.button.addEventListener("click", () => {
-            if (calcButton.type){
-                calcButton.execute(calcButton.type)
-            }
-            calcButton.execute();
-        })
-    })
+    if (addOperator) expressionString = String(anwser) + operator;
+    else expressionString = String(anwser);
     
 }
 
-executeButtons(systemButtons);
-executeButtons(operateButtons)
+function multiply(numbers){
+    addOperator = false;
+    let anwser = 0;
+    numbers.map(value => {
+        if (value == ""){
+            addOperator = true;
+            value = 0;
+        }
+        anwser += Number(value);
+    })
 
+    if (addOperator) expressionString = String(anwser) + operator;
+    else expressionString = String(anwser);
+
+}
+
+function operateNumbers(string,operator){
+    let numbers = string.split(operator);
+    if(operator == "+"){
+        addition(numbers)
+    }
+    
+
+
+
+
+
+}
+
+
+function equalExpression () {
+    evaluateExprssion(expressionString);
+    screenText.textContent = expressionString;
+}
+
+function addDecimal(){
+    checkLength();
+    if (!canEdit) return;
+    if (screenText.textContent == "0") screenText.textContent = ""
+    let addDecimal = true;
+    let stringIsBeforeOoperator = true;
+    let testString = ["",""]
+    let index = 0;
+    
+    for(let value of expressionString){
+        if (value == "+"  | "/" | "*") {
+            index += 1;
+        }
+        testString[index] += value;
+    }
+    let stringBeforeOperator = /\./g.test(testString[0]);
+    let stringAfterOperator = "";
+    if(testString[1] != ""){
+         stringAfterOperator = /\./g.test(testString[1]);
+    }
+
+    if (testString[1] != ""){
+        stringIsBeforeOoperator = true;
+        if (stringBeforeOperator && stringAfterOperator){
+            addDecimal = false;
+        } else if (!stringBeforeOperator && stringAfterOperator){
+            addDecimal = false;
+        } else {
+            addDecimal = true;
+        }
+        
+    } else {
+        stringIsBeforeOoperator = false;
+        if (stringBeforeOperator) addDecimal = false;
+        else addDecimal = true
+
+    }
+    if (!addDecimal) return ;
+    if (stringIsBeforeOoperator){
+        if (testString[1] == "+" ){
+            console.log("something")
+            expressionString += "0."
+            screenText.textContent = expressionString;
+        } else {
+            expressionString += ".";
+            screenText.textContent = expressionString;
+        }
+    } else {
+        expressionString += ".";
+        screenText.textContent = expressionString;
+    }
+}
+
+
+
+
+function deleteChar () {
+    stringLength = expressionString.length;
+    expressionString = expressionString.slice(0,stringLength-1)
+    if (expressionString == "") expressionString = "0"
+    screenText.textContent = expressionString
+}
+
+function checkLength(){
+    if(expressionString.length  == 12) canEdit = false;
+    else canEdit = true;
+}
+
+function evaluateExprssion (string){
+
+
+    for (let value of string){
+        if(value == "+"){
+            operateNumbers(string,"+")
+        }
+    }
+
+}
+
+
+
+
+let numbersArray = [{button:one, number:1}, {button:two, number:2},
+    {button:three, number:3}, {button:four, number:4},
+    {button:five, number: 5}, {button:six, number:6},
+    {button:seven, number:7}, {button: eight, number:8},
+    {button:nine, number:9}, {button: zero, number: 0},
+
+]
+let systemButtons = [{button: clear, execute: clearScreen}, {button: backspace, execute: deleteChar}, {button:decimal, execute: addDecimal}]
+let operatorButtons = [{button: plus, execute: addOperator, operator:"+"}, {button: equals, execute: equalExpression},
+                        {button:multiply, execute: addOperator, operator: "*"}
+]
+
+
+numbersArray.map(numberButton => {
+    numberButton.button.addEventListener("click", () => {
+        checkLength()
+        if(canEdit){
+            if (expressionString == "0"){
+                expressionString = ""
+            }
+            expressionString += numberButton.number;
+            screenText.textContent = expressionString;
+
+        }
+
+
+    })
+})
+
+
+
+
+function operateButtons(operatorButton){
+    operatorButton.map(calcButton => {
+        calcButton.button.addEventListener("click", () => {
+            if(typeof calcButton.operator != "undefined"){
+                calcButton.execute(calcButton.operator)
+            } else {
+                calcButton.execute();
+            }
+
+
+        })
+    })
+}
+
+
+
+operateButtons(systemButtons);
+operateButtons(operatorButtons)
