@@ -1,6 +1,6 @@
 let clear = document.querySelector(".clear");
 let backspace = document.querySelector(".backspace");
-let squared = document.querySelector(".squared");
+let exponent = document.querySelector(".exponent");
 let divide = document.querySelector(".divide");
 let seven = document.querySelector(".seven");
 let eight = document.querySelector(".eight");
@@ -34,19 +34,36 @@ function clearScreen(){
     screenText.textContent = expressionString;
 }
 
+function includesOperator(){
+if(expressionString.includes("+") && !expressionString.includes("*") && !expressionString.includes("/") && !expressionString.includes("^") &&/\d+[*/+]\d+/.test(expressionString)){
+        return true;
+    } else if(expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("/") && !expressionString.includes("^") && /\d+[*/+]\d+/.test(expressionString)){
+        return true;
+    } else if(expressionString.includes("/") && !expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("^") && /\d+[*/+]\d+/.test(expressionString)){
+        return true;
+    } else if(expressionString.includes("^") && !expressionString.includes("*") && !expressionString.includes("+")  && !expressionString.includes("/")&& /\d+[*/+]\d+/.test(expressionString)) {
+        return false;
+    }
+
+}
+
 
 
 function addOperator(operator){
     let fixedOperator = false;
     let swapOperator;
     if(expressionString.includes(operator)){
-        evaluateExprssion(expressionString);
-    } else {
+        evaluateExpression(expressionString);
+    } else if (includesOperator()){
+        evaluateExpression(expressionString)
+        expressionString += operator;
+    }   else {
         for (let value of expressionString){
-           if(value == "+"| value =="*"| value =="/") fixedOperator = true;
-           if (value == "+")  swapOperator = expressionString.replace(/\+/g, operator);
-           if (value == "*")  swapOperator = expressionString.replace(/\*/g, operator);
-           if (value == "/")  swapOperator = expressionString.replace(/\//g, operator);
+           if(value == "+"|| value =="*"|| value =="/" || value == "^") fixedOperator = true;
+           if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
+           if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
+           if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
+           if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
 
         }
 
@@ -63,11 +80,11 @@ function addOperator(operator){
     screenText.textContent = expressionString;
 }
 
-function addition(numbers){
-    addOperator = false;
+function addition(numbers,operator){
+    let addOperator = false;
     let anwser = 0;
     numbers.map(value => {
-        if (value == ""){
+        if (value == "" || value == "Error"){
             addOperator = true;
             value = 0;
         }
@@ -79,29 +96,94 @@ function addition(numbers){
     
 }
 
-function multiply(numbers){
-    addOperator = false;
-    let anwser = 0;
+function multiplication(numbers,operator){
+
+    let addOperator = false;
+    let anwser = 1;
     numbers.map(value => {
-        if (value == ""){
+        if (value == "" || value == "Error"){
+            console.log(value);
             addOperator = true;
-            value = 0;
+            value = 1;
         }
-        anwser += Number(value);
+        anwser *= Number(value);
     })
 
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser);
-
+    
 }
+
+function division(numbers,operator){
+    let addOperator = false;
+    let anwser = 1;
+    numbers.map(value => {
+        console.log(value)
+        if (value == "" || value == "Error"){
+            addOperator = true;
+
+            value = number[0] * number[0];
+        }
+    })
+
+    anwser = Number(numbers[0])/Number(numbers[1]);
+    if (numbers[1] == 0 && numbers[0] == 0){
+
+        anwser = "Error"
+    } else {
+
+        anwser = numbers[0]/numbers[1];
+    }
+    if (addOperator) expressionString = String(anwser) + operator;
+    else expressionString = String(anwser);
+    
+}
+
+function power(numbers,operator){
+    let addOperator = false;
+    let anwser = 1;
+    numbers.map(value => {
+        if (value == "" || value == "Error"){
+            addOperator = true;
+            value = 1;
+        }
+    })
+
+    function toPower(number, power){
+        if (power == 0){
+            return 1;
+        } else if (power == 1){
+            return number
+        } else {
+            let powerNumber = number * number;
+            let powerExponent = power-1
+            toPower(powerNumber, powerExponent)
+        }
+    }
+    anwser = toPower(numbers[0],numbers[1])
+    console.log(anwser)
+
+    if (addOperator) expressionString = String(anwser) + operator;
+    else expressionString = String(anwser);
+}
+
+
 
 function operateNumbers(string,operator){
+
     let numbers = string.split(operator);
     if(operator == "+"){
-        addition(numbers)
+        addition(numbers,"+")
     }
-    
-
+    if(operator == "*"){
+        multiplication(numbers,"*")
+    }
+    if(operator == "/"){
+        division(numbers,"/")
+    }
+    if (operator == "^"){
+        power(numbers, "^")
+    }
 
 
 
@@ -110,7 +192,7 @@ function operateNumbers(string,operator){
 
 
 function equalExpression () {
-    evaluateExprssion(expressionString);
+    evaluateExpression(expressionString);
     screenText.textContent = expressionString;
 }
 
@@ -124,7 +206,7 @@ function addDecimal(){
     let index = 0;
     
     for(let value of expressionString){
-        if (value == "+"  | "/" | "*") {
+        if (value == "+"  || value ==  "/" || value == "*" || value == "^") {
             index += 1;
         }
         testString[index] += value;
@@ -153,8 +235,7 @@ function addDecimal(){
     }
     if (!addDecimal) return ;
     if (stringIsBeforeOoperator){
-        if (testString[1] == "+" ){
-            console.log("something")
+        if (testString[1] == "+" || testString[1] == "*" || testString[1] ==  "/" || testString[1] == "^" ){
             expressionString += "0."
             screenText.textContent = expressionString;
         } else {
@@ -182,13 +263,14 @@ function checkLength(){
     else canEdit = true;
 }
 
-function evaluateExprssion (string){
+function evaluateExpression (string){
 
 
     for (let value of string){
-        if(value == "+"){
-            operateNumbers(string,"+")
-        }
+        if(value == "+") operateNumbers(string,"+");
+        if(value == "*") operateNumbers(string, "*");
+        if(value == "/") operateNumbers(string, "/");
+        if(value == "^") operateNumbers(string, "^");
     }
 
 }
@@ -205,7 +287,8 @@ let numbersArray = [{button:one, number:1}, {button:two, number:2},
 ]
 let systemButtons = [{button: clear, execute: clearScreen}, {button: backspace, execute: deleteChar}, {button:decimal, execute: addDecimal}]
 let operatorButtons = [{button: plus, execute: addOperator, operator:"+"}, {button: equals, execute: equalExpression},
-                        {button:multiply, execute: addOperator, operator: "*"}
+                       {button:multiply, execute: addOperator, operator: "*"}, {button: divide, execute: addOperator, operator: "/"},
+                       {button:exponent, execute: addOperator, operator:"^"}
 ]
 
 
@@ -213,14 +296,13 @@ numbersArray.map(numberButton => {
     numberButton.button.addEventListener("click", () => {
         checkLength()
         if(canEdit){
-            if (expressionString == "0"){
+            if (expressionString == "0" || expressionString == "Error"){
                 expressionString = ""
             }
             expressionString += numberButton.number;
             screenText.textContent = expressionString;
 
         }
-
 
     })
 })
@@ -231,13 +313,12 @@ numbersArray.map(numberButton => {
 function operateButtons(operatorButton){
     operatorButton.map(calcButton => {
         calcButton.button.addEventListener("click", () => {
+            
             if(typeof calcButton.operator != "undefined"){
                 calcButton.execute(calcButton.operator)
             } else {
                 calcButton.execute();
             }
-
-
         })
     })
 }
