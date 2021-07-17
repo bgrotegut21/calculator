@@ -18,6 +18,7 @@ let zero = document.querySelector(".zero");
 let decimal = document.querySelector(".decimal");
 let equals = document.querySelector(".equals");
 let screenText = document.querySelector(".screen-text")
+let factorial = document.querySelector(".factorial")
 
 let canAddNumber = true
 let type = ""
@@ -35,13 +36,23 @@ function clearScreen(){
 }
 
 function includesOperator(){
-if(expressionString.includes("+") && !expressionString.includes("*") && !expressionString.includes("/") && !expressionString.includes("^") &&/\d+[*/+]\d+/.test(expressionString)){
+if(expressionString.includes("+") && !expressionString.includes("*") && !expressionString.includes("/") && 
+!expressionString.includes("^") &&/\d+[*/+^]\d+/.test(expressionString)){
         return true;
-    } else if(expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("/") && !expressionString.includes("^") && /\d+[*/+]\d+/.test(expressionString)){
+    } else if(expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("/") &&
+     !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString)){
         return true;
-    } else if(expressionString.includes("/") && !expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("^") && /\d+[*/+]\d+/.test(expressionString)){
+    } else if(expressionString.includes("/") && !expressionString.includes("*") && !expressionString.includes("+") && 
+    !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString)){
         return true;
-    } else if(expressionString.includes("^") && !expressionString.includes("*") && !expressionString.includes("+")  && !expressionString.includes("/")&& /\d+[*/+]\d+/.test(expressionString)) {
+    } else if(expressionString.includes("^") && !expressionString.includes("*") && !expressionString.includes("+")  && 
+    !expressionString.includes("/")&&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString)) {
+        return true;
+        
+    } else if (expressionString.includes("!") && !expressionString.includes("*") && !expressionString.includes("+")  && 
+    !expressionString.includes("/")&&  !expressionString.includes("^") && /\d+[*/+^]/.test(expressionString)) {
+        return true;
+    } else {
         return false;
     }
 
@@ -52,18 +63,25 @@ if(expressionString.includes("+") && !expressionString.includes("*") && !express
 function addOperator(operator){
     let fixedOperator = false;
     let swapOperator;
+    if(expressionString == "0"){
+        expressionString = "-0"
+        screenText.textContent =expressionString;
+    }
     if(expressionString.includes(operator)){
+
         evaluateExpression(expressionString);
     } else if (includesOperator()){
         evaluateExpression(expressionString)
         expressionString += operator;
     }   else {
         for (let value of expressionString){
-           if(value == "+"|| value =="*"|| value =="/" || value == "^") fixedOperator = true;
+           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!") fixedOperator = true;
            if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
            if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
            if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
            if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
+           if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
+
 
         }
 
@@ -145,46 +163,57 @@ function power(numbers,operator){
     numbers.map(value => {
         if (value == "" || value == "Error"){
             addOperator = true;
-            value = 1;
+            
         }
     })
-
-    function toPower(number, power){
-        if (power == 0){
-            return 1;
-        } else if (power == 1){
-            return number
-        } else {
-            let powerNumber = number * number;
-            let powerExponent = power-1
-            toPower(powerNumber, powerExponent)
+    if (!addOperator){
+        function toPower(number, power){
+            if (power == 0){
+                return 1;
+            } else if (power == 1){
+                console.log(number)
+                return number;
+            } else {
+                let powerNumber = number * number;
+                let powerExponent = power-1
+               return toPower(powerNumber, powerExponent)
+            }
         }
-    }
-    anwser = toPower(numbers[0],numbers[1])
-    console.log(anwser)
+        anwser = toPower(numbers[0],numbers[1])
 
+    } else {
+        anwser = numbers[0];
+    }
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser);
 }
 
+function findFactorial(numbers){
+    let addOperator = false;
+
+    let anwser = factorNumber(Number(numbers[0]), Number(numbers[0]))
+
+    function factorNumber(number){
+        if( number == 0 || number == 1){
+            return 1;
+        } else {
+            return number * factorNumber(number -1);
+        }
+    }
+    expressionString = String(anwser);
+
+}
 
 
 function operateNumbers(string,operator){
 
     let numbers = string.split(operator);
-    if(operator == "+"){
-        addition(numbers,"+")
-    }
-    if(operator == "*"){
-        multiplication(numbers,"*")
-    }
-    if(operator == "/"){
-        division(numbers,"/")
-    }
-    if (operator == "^"){
-        power(numbers, "^")
-    }
+    if (operator =="+") addition(numbers,"+")
+    if (operator =="*") multiplication(numbers,"+")
+    if (operator =="/") division(numbers,"+")
+    if (operator == "^") power(numbers, "^");
 
+    if (operator == "!") findFactorial(numbers, "!")
 
 
 
@@ -206,7 +235,7 @@ function addDecimal(){
     let index = 0;
     
     for(let value of expressionString){
-        if (value == "+"  || value ==  "/" || value == "*" || value == "^") {
+        if (value == "+"  || value ==  "/" || value == "*" || value == "^" || value == "!") {
             index += 1;
         }
         testString[index] += value;
@@ -235,7 +264,7 @@ function addDecimal(){
     }
     if (!addDecimal) return ;
     if (stringIsBeforeOoperator){
-        if (testString[1] == "+" || testString[1] == "*" || testString[1] ==  "/" || testString[1] == "^" ){
+        if (testString[1] == "+" || testString[1] == "*" || testString[1] ==  "/" || testString[1] == "^" || testString[1] == "!"){
             expressionString += "0."
             screenText.textContent = expressionString;
         } else {
@@ -271,6 +300,7 @@ function evaluateExpression (string){
         if(value == "*") operateNumbers(string, "*");
         if(value == "/") operateNumbers(string, "/");
         if(value == "^") operateNumbers(string, "^");
+        if(value == "!") operateNumbers(string,"!")
     }
 
 }
@@ -288,7 +318,7 @@ let numbersArray = [{button:one, number:1}, {button:two, number:2},
 let systemButtons = [{button: clear, execute: clearScreen}, {button: backspace, execute: deleteChar}, {button:decimal, execute: addDecimal}]
 let operatorButtons = [{button: plus, execute: addOperator, operator:"+"}, {button: equals, execute: equalExpression},
                        {button:multiply, execute: addOperator, operator: "*"}, {button: divide, execute: addOperator, operator: "/"},
-                       {button:exponent, execute: addOperator, operator:"^"}
+                       {button:exponent, execute: addOperator, operator:"^"}, {button: factorial, execute: addOperator, operator: "!"}, {button: minus, execute: addOperator,operator:"-" }
 ]
 
 

@@ -54,10 +54,6 @@ div {
 
 
 
-.zero {
-    grid-column: span 2;
-
-}
 
 
 .divide, .multiply, .minus, .plus, .equals {
@@ -74,7 +70,6 @@ div {
     cursor:default;
     background:rgb(42, 42, 42);
 }
-
 
 
 
