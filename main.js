@@ -58,38 +58,52 @@ if(expressionString.includes("+") && !expressionString.includes("*") && !express
 
 }
 
+function subtractionOperator(){
+    console.log(expressionString)
+
+    if(expressionString == "0"){
+        expressionString = "-"
+        screenText.textContent = expressionString;
+    } else if (/\d+-\d+/.test(expressionString) || /-\d+-\d+/.test(expressionString)){
+        console.log(expressionString)
+        evaluateExpression(expressionString);
+    } else if (/-\d+/.test(expressionString) && !/-\d+-/.test(expressionString)){
+        expressionString += "-"
+    }
+
+    
+
+}
 
 
 function addOperator(operator){
     let fixedOperator = false;
     let swapOperator;
-    if(expressionString == "0"){
-        expressionString = "-0"
-        screenText.textContent =expressionString;
-    }
-    if(expressionString.includes(operator)){
+  
 
-        evaluateExpression(expressionString);
-    } else if (includesOperator()){
-        evaluateExpression(expressionString)
-        expressionString += operator;
-    }   else {
+    if(expressionString.includes(operator)){
+        if(expressionString.includes("-")) subtractionOperator()
+        else evaluateExpression(expressionString);
+    } else {
         for (let value of expressionString){
-           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!") fixedOperator = true;
+           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" ) fixedOperator = true;
+
            if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
            if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
            if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
            if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
            if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
 
-
+            console.log(expressionString)
         }
 
         if(fixedOperator){
             expressionString = swapOperator;
             screenText.textContent = expressionString;
         } else {
-            expressionString += operator;
+            subtractionOperator() 
+            if(!expressionString.includes("-")) expressionString += operator;
+
         }
 
 
@@ -227,54 +241,17 @@ function equalExpression () {
 
 function addDecimal(){
     checkLength();
-    if (!canEdit) return;
-    if (screenText.textContent == "0") screenText.textContent = ""
-    let addDecimal = true;
-    let stringIsBeforeOoperator = true;
-    let testString = ["",""]
-    let index = 0;
-    
-    for(let value of expressionString){
-        if (value == "+"  || value ==  "/" || value == "*" || value == "^" || value == "!") {
-            index += 1;
-        }
-        testString[index] += value;
-    }
-    let stringBeforeOperator = /\./g.test(testString[0]);
-    let stringAfterOperator = "";
-    if(testString[1] != ""){
-         stringAfterOperator = /\./g.test(testString[1]);
-    }
+    console.log(expressionString)
 
-    if (testString[1] != ""){
-        stringIsBeforeOoperator = true;
-        if (stringBeforeOperator && stringAfterOperator){
-            addDecimal = false;
-        } else if (!stringBeforeOperator && stringAfterOperator){
-            addDecimal = false;
-        } else {
-            addDecimal = true;
-        }
-        
-    } else {
-        stringIsBeforeOoperator = false;
-        if (stringBeforeOperator) addDecimal = false;
-        else addDecimal = true
-
+    if (/^[\-]?\d+\.\d+[\/+\-*!^]\d+$/.test(expressionString)){
+        expressionString += "."
+    } else if (/^[\-]?\d+$/.test(expressionString)){
+        expressionString += "."
+    } else if (/^[\-]?\d+[\/+\-*!^]\d+$/.test(expressionString)){
+        expressionString += "."
     }
-    if (!addDecimal) return ;
-    if (stringIsBeforeOoperator){
-        if (testString[1] == "+" || testString[1] == "*" || testString[1] ==  "/" || testString[1] == "^" || testString[1] == "!"){
-            expressionString += "0."
-            screenText.textContent = expressionString;
-        } else {
-            expressionString += ".";
-            screenText.textContent = expressionString;
-        }
-    } else {
-        expressionString += ".";
-        screenText.textContent = expressionString;
-    }
+    screenText.textContent = expressionString;
+ 
 }
 
 
@@ -318,7 +295,8 @@ let numbersArray = [{button:one, number:1}, {button:two, number:2},
 let systemButtons = [{button: clear, execute: clearScreen}, {button: backspace, execute: deleteChar}, {button:decimal, execute: addDecimal}]
 let operatorButtons = [{button: plus, execute: addOperator, operator:"+"}, {button: equals, execute: equalExpression},
                        {button:multiply, execute: addOperator, operator: "*"}, {button: divide, execute: addOperator, operator: "/"},
-                       {button:exponent, execute: addOperator, operator:"^"}, {button: factorial, execute: addOperator, operator: "!"}, {button: minus, execute: addOperator,operator:"-" }
+                       {button:exponent, execute: addOperator, operator:"^"}, {button: factorial, execute: addOperator, operator: "!"}, 
+                       {button: minus, execute: addOperator,operator:"-" }
 ]
 
 
@@ -326,10 +304,9 @@ numbersArray.map(numberButton => {
     numberButton.button.addEventListener("click", () => {
         checkLength()
         if(canEdit){
-            if (expressionString == "0" || expressionString == "Error"){
-                expressionString = ""
-            }
-            expressionString += numberButton.number;
+            if (expressionString == "0" || expressionString == "Error") expressionString = ""
+            if(expressionString == "-") expressionString = `-${numberButton.number}`
+            else expressionString += numberButton.number;
             screenText.textContent = expressionString;
 
         }
