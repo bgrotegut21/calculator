@@ -81,7 +81,7 @@ function addOperator(operator){
     let swapOperator;
   
 
-    if(expressionString.includes(operator)){
+    if(expressionString.includes(opera){
         if(expressionString.includes("-")) subtractionOperator()
         else evaluateExpression(expressionString);
     } else {
