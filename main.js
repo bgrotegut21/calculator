@@ -36,21 +36,21 @@ function clearScreen(){
 }
 
 function includesOperator(){
-if(expressionString.includes("+") && !expressionString.includes("*") && !expressionString.includes("/") && 
-!expressionString.includes("^") &&/\d+[*/+^]\d+/.test(expressionString)){
+    if(expressionString.includes("+") && !expressionString.includes("*") && !expressionString.includes("/") && 
+    !expressionString.includes("^")   &&/\d+[*/+^]\d+/.test(expressionString) || /\d+[+]-\d+/.test(expressionString) ){
         return true;
     } else if(expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("/") &&
-     !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString)){
+     !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString) || /\d+[*]-\d+/.test(expressionString) ){
         return true;
     } else if(expressionString.includes("/") && !expressionString.includes("*") && !expressionString.includes("+") && 
-    !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString)){
+    !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString) || /\d+[/]-\d+/.test(expressionString)){
         return true;
     } else if(expressionString.includes("^") && !expressionString.includes("*") && !expressionString.includes("+")  && 
-    !expressionString.includes("/")&&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString)) {
+    !expressionString.includes("/")&&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString) || /\d+[\^]-\d+/.test(expressionString)) {
         return true;
         
     } else if (expressionString.includes("!") && !expressionString.includes("*") && !expressionString.includes("+")  && 
-    !expressionString.includes("/")&&  !expressionString.includes("^") && /\d+[*/+^]/.test(expressionString)) {
+    !expressionString.includes("/")&&  !expressionString.includes("^") && /\d+[*/+^]/.test(expressionString) || /\d+[!]-\d+/.test(expressionString)) {
         return true;
     } else {
         return false;
@@ -59,51 +59,50 @@ if(expressionString.includes("+") && !expressionString.includes("*") && !express
 }
 
 function subtractionOperator(){
-    console.log(expressionString)
-
-    if(expressionString == "0"){
-        expressionString = "-"
-        screenText.textContent = expressionString;
-    } else if (/\d+-\d+/.test(expressionString) || /-\d+-\d+/.test(expressionString)){
-        console.log(expressionString)
-        evaluateExpression(expressionString);
-    } else if (/-\d+/.test(expressionString) && !/-\d+-/.test(expressionString)){
+    if (expressionString == "0") expressionString = "-";
+    if (expressionString == "-") return;
+    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString)){
         expressionString += "-"
+    } else {
+        return;
     }
+}
 
-    
 
+
+
+
+
+function testString(string){
+    if (/-\d+[+/*^!]\d+/.test(string) || /-\d+\.\d+[+/*^]\d+\.\d+/.test(string)) return true;
+    else return false;
 }
 
 
 function addOperator(operator){
     let fixedOperator = false;
     let swapOperator;
-  
-
-    if(expressionString.includes(opera){
-        if(expressionString.includes("-")) subtractionOperator()
-        else evaluateExpression(expressionString);
+ 
+    if (operator == "-") subtractionOperator();
+    if(includesOperator()){
+         evaluateExpression(expressionString);
     } else {
         for (let value of expressionString){
-           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" ) fixedOperator = true;
+           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" &&  !expressionString.includes("-") || operator != "-")  fixedOperator = true;
+           console.log(operator, "operator");
+           console.log(fixedOperator, "fixed operator")
 
            if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
            if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
            if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
            if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
            if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
-
-            console.log(expressionString)
-        }
-
+        } 
         if(fixedOperator){
             expressionString = swapOperator;
-            screenText.textContent = expressionString;
         } else {
-            subtractionOperator() 
-            if(!expressionString.includes("-")) expressionString += operator;
-
+          if (operator != "-") expressionString += operator;
+          else subtractionOperator();
         }
 
 
@@ -113,6 +112,7 @@ function addOperator(operator){
 }
 
 function addition(numbers,operator){
+    console.log(numbers)
     let addOperator = false;
     let anwser = 0;
     numbers.map(value => {
@@ -123,18 +123,20 @@ function addition(numbers,operator){
         anwser += Number(value);
     })
 
+    console.log(anwser)
     if (addOperator) expressionString = String(anwser) + operator;
-    else expressionString = String(anwser);
+    else expressionString = String(anwser) + operator;
+    screenText.textContent = expressionString
     
 }
 
 function multiplication(numbers,operator){
+    console.log(numbers)
 
     let addOperator = false;
     let anwser = 1;
     numbers.map(value => {
         if (value == "" || value == "Error"){
-            console.log(value);
             addOperator = true;
             value = 1;
         }
@@ -142,7 +144,7 @@ function multiplication(numbers,operator){
     })
 
     if (addOperator) expressionString = String(anwser) + operator;
-    else expressionString = String(anwser);
+    else expressionString = String(anwser) + operator;
     
 }
 
@@ -150,7 +152,6 @@ function division(numbers,operator){
     let addOperator = false;
     let anwser = 1;
     numbers.map(value => {
-        console.log(value)
         if (value == "" || value == "Error"){
             addOperator = true;
 
@@ -167,7 +168,7 @@ function division(numbers,operator){
         anwser = numbers[0]/numbers[1];
     }
     if (addOperator) expressionString = String(anwser) + operator;
-    else expressionString = String(anwser);
+    else expressionString = String(anwser) + operator;
     
 }
 
@@ -185,7 +186,6 @@ function power(numbers,operator){
             if (power == 0){
                 return 1;
             } else if (power == 1){
-                console.log(number)
                 return number;
             } else {
                 let powerNumber = number * number;
@@ -199,7 +199,8 @@ function power(numbers,operator){
         anwser = numbers[0];
     }
     if (addOperator) expressionString = String(anwser) + operator;
-    else expressionString = String(anwser);
+    else expressionString = String(anwser) + operator;
+    screenText.textContent = expressionString;
 }
 
 function findFactorial(numbers){
@@ -223,8 +224,8 @@ function operateNumbers(string,operator){
 
     let numbers = string.split(operator);
     if (operator =="+") addition(numbers,"+")
-    if (operator =="*") multiplication(numbers,"+")
-    if (operator =="/") division(numbers,"+")
+    if (operator =="*") multiplication(numbers,"*")
+    if (operator =="/") division(numbers,"/")
     if (operator == "^") power(numbers, "^");
 
     if (operator == "!") findFactorial(numbers, "!")
@@ -241,7 +242,6 @@ function equalExpression () {
 
 function addDecimal(){
     checkLength();
-    console.log(expressionString)
 
     if (/^[\-]?\d+\.\d+[\/+\-*!^]\d+$/.test(expressionString)){
         expressionString += "."
@@ -270,7 +270,6 @@ function checkLength(){
 }
 
 function evaluateExpression (string){
-
 
     for (let value of string){
         if(value == "+") operateNumbers(string,"+");
@@ -307,6 +306,7 @@ numbersArray.map(numberButton => {
             if (expressionString == "0" || expressionString == "Error") expressionString = ""
             if(expressionString == "-") expressionString = `-${numberButton.number}`
             else expressionString += numberButton.number;
+
             screenText.textContent = expressionString;
 
         }
