@@ -61,7 +61,7 @@ function includesOperator(){
 function subtractionOperator(){
     if (expressionString == "0") expressionString = "-";
     if (expressionString == "-") return;
-    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString)){
+    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /-\d+[+/*^!]/.test(expressionString)){
         expressionString += "-"
     } else {
         return;
@@ -74,7 +74,7 @@ function subtractionOperator(){
 
 
 function testString(string){
-    if (/-\d+[+/*^!]\d+/.test(string) || /-\d+\.\d+[+/*^]\d+\.\d+/.test(string)) return true;
+    if (/-\d+[+/*^!]\d+/.test(string) || /-\d+\.\d+[+/*^]\d+\.\d+/.test(string) ) return true;
     else return false;
 }
 
@@ -88,9 +88,9 @@ function addOperator(operator){
          evaluateExpression(expressionString);
     } else {
         for (let value of expressionString){
-           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" &&  !expressionString.includes("-") || operator != "-")  fixedOperator = true;
-           console.log(operator, "operator");
-           console.log(fixedOperator, "fixed operator")
+           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" )  fixedOperator = true;
+           if(operator == "-") fixedOperator = false;
+         
 
            if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
            if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
@@ -101,8 +101,8 @@ function addOperator(operator){
         if(fixedOperator){
             expressionString = swapOperator;
         } else {
-          if (operator != "-") expressionString += operator;
-          else subtractionOperator();
+            console.log(operator, "operator")
+            if (operator != "-") expressionString += operator;
         }
 
 
