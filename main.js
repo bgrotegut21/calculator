@@ -23,7 +23,6 @@ let factorial = document.querySelector(".factorial")
 let canAddNumber = true
 let type = ""
 let showAnwser = true;
-let canEdit = true
 
 let expressionString = "0"
 
@@ -50,7 +49,7 @@ function includesOperator(){
         return true;
         
     } else if (expressionString.includes("!") && !expressionString.includes("*") && !expressionString.includes("+")  && 
-    !expressionString.includes("/")&&  !expressionString.includes("^") && /\d+[*/+^]/.test(expressionString) || /\d+[!]-\d+/.test(expressionString)) {
+    !expressionString.includes("/")&&  !expressionString.includes("^") && /\d+[*/+^]/.test(expressionString)) {
         return true;
     } else {
         return false;
@@ -59,17 +58,17 @@ function includesOperator(){
 }
 
 function subtractionOperator(){
+    if (testFactorial(expressionString)) return;
     if (expressionString == "0") expressionString = "-";
     if (expressionString == "-") return;
+
+
     if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /-\d+[+/*^!]/.test(expressionString) || /\d+[+/*^!]/.test(expressionString) ||
-    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/-\d+\/\d+[+/*^!]/.test(expressionString) ||/\d+\.\d+[+/*^!]/.test(expressionString)){
+    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/-\d+\.\d+[+/*^!]/.test(expressionString) ||/\d+\.\d+[+/*^!]/.test(expressionString)){
         expressionString += "-"
-    } else {
-        return;
-    }
+    } 
+
 }
-
-
 
 
 
@@ -84,36 +83,41 @@ function testString(string){
 }
 
 
-function addOperator(operator){
-    let fixedOperator = false;
+function swapOperators (operator){
     let swapOperator;
- 
-    if (operator == "-") subtractionOperator();
+    let fixedOperator = false;
+    for (let value of expressionString){
+        if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" )  fixedOperator = true;
+        if(operator == "-") fixedOperator = false;
+      
+
+        if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
+        if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
+        if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
+        if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
+        if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
+     } 
+     if(fixedOperator){
+         expressionString = swapOperator;
+     } else {
+         if (operator != "-") expressionString += operator;
+         else subtractionOperator();
+     }
+
+}
+
+function addOperator(operator){
+    if(!checkLength()) return;
     console.log(operator)
     console.log(testString(expressionString))
     if(testString(expressionString)) {
         evaluateExpression(expressionString);
     } else if(includesOperator()){
          evaluateExpression(expressionString);
+    } else if (testFactorial(expressionString)){
+        evaluateExpression(expressionString);
     } else {
-        for (let value of expressionString){
-           if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" )  fixedOperator = true;
-           if(operator == "-") fixedOperator = false;
-         
-
-           if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
-           if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
-           if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
-           if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
-           if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
-        } 
-        if(fixedOperator){
-            expressionString = swapOperator;
-        } else {
-            if (operator != "-") expressionString += operator;
-        }
-
-
+        swapOperators(operator)
 
     }
     screenText.textContent = expressionString;
@@ -130,6 +134,35 @@ function addition(numbers,operator){
         }
         anwser += Number(value);
     })
+
+    console.log(anwser)
+    if (addOperator) expressionString = String(anwser) + operator;
+    else expressionString = String(anwser) + operator;
+    screenText.textContent = expressionString
+    
+}
+
+function checkNegativeNumber(array){
+    for (let string of array){
+        if (string.includes("-")){
+            return true;
+        } 
+    }
+    return false;
+}
+
+function subtraction(numbers,operator){
+    
+    console.log(numbers)
+    let addOperator = false;
+    let anwser = 0;
+    numbers.map(value => {
+        if (value == "" || value == "Error"){
+            addOperator = true;
+            value = 0;
+        }
+    })
+    anwser = Number(numbers[0]) + Number(numbers[1])
 
     console.log(anwser)
     if (addOperator) expressionString = String(anwser) + operator;
@@ -227,20 +260,48 @@ function findFactorial(numbers){
 
 }
 
+function changeNumbers(string){
+    let numbers = []
+    let index = 0;
+    let  first = false;
+    for (let char of string){
+        if (char == "-"){
+            if (!first){
+                index = 0;
+                first = true
+                numbers.push("")
+            } else {
+                numbers.push("")
+                index += 1;
+            }
+
+     
+        }
+        numbers[index] += char;
+    }
+    console.log(numbers)
+    return numbers;
+
+}
 
 function operateNumbers(string,operator){
-
     let numbers = string.split(operator);
+
+
+    if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
+        numbers = changeNumbers(string);
+    }
+
     if (operator =="+") addition(numbers,"+")
     if (operator =="*") multiplication(numbers,"*")
     if (operator =="/") division(numbers,"/")
     if (operator == "^") power(numbers, "^");
 
     if (operator == "!") findFactorial(numbers, "!")
-
-
+    if (operator == "-")subtraction(numbers,"-")
 
 }
+
 
 
 function equalExpression () {
@@ -257,11 +318,24 @@ function addDecimal(){
         expressionString += "."
     } else if (/^[\-]?\d+[\/+\-*!^]\d+$/.test(expressionString)){
         expressionString += "."
+    } else if (/^[\-]?\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
+        expressionString += "."
+    } else if (/^[\-]?\d+\.\d+[\/+\-*!^]\d+$/.test(expressionString)) {
+        expressionString += "."
+    } else if (/^[\-]?\d+\.\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
+        expressionString += "."
     }
     screenText.textContent = expressionString;
  
 }
 
+function checkSubtraction(string){
+    if (/\d+-\d+/.test(string) || /-\d+-\d+/.test(string) || /\d+\.\d+-\d+\.\d+/.test(string) ||  /-\d+\.\d+-\d+\.\d+/.test(string)){
+        return true;
+    } else {
+        return false
+    }
+}
 
 
 
@@ -273,8 +347,8 @@ function deleteChar () {
 }
 
 function checkLength(){
-    if(expressionString.length  == 12) canEdit = false;
-    else canEdit = true;
+    if(expressionString.length  == 12) return false
+    else return true;
 }
 
 function evaluateExpression (string){
@@ -286,11 +360,16 @@ function evaluateExpression (string){
         if(value == "^") operateNumbers(string, "^");
         if(value == "!") operateNumbers(string,"!")
     }
+    if (checkSubtraction(string)) operateNumbers(string, "-")
 
 }
 
 
-
+function testFactorial(string){
+    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string)) return true;
+    else return false;
+    
+}
 
 let numbersArray = [{button:one, number:1}, {button:two, number:2},
     {button:three, number:3}, {button:four, number:4},
@@ -309,15 +388,10 @@ let operatorButtons = [{button: plus, execute: addOperator, operator:"+"}, {butt
 
 numbersArray.map(numberButton => {
     numberButton.button.addEventListener("click", () => {
-        checkLength()
-        if(canEdit){
-            if (expressionString == "0" || expressionString == "Error") expressionString = ""
-            if(expressionString == "-") expressionString = `-${numberButton.number}`
-            else expressionString += numberButton.number;
-
-            screenText.textContent = expressionString;
-
-        }
+        if(!checkLength()) return "";
+        if (expressionString == "0" || expressionString == "Error") expressionString = ""
+        if (!testFactorial(expressionString)) expressionString += numberButton.number;
+        screenText.textContent = expressionString;
 
     })
 })
@@ -328,7 +402,7 @@ numbersArray.map(numberButton => {
 function operateButtons(operatorButton){
     operatorButton.map(calcButton => {
         calcButton.button.addEventListener("click", () => {
-            
+
             if(typeof calcButton.operator != "undefined"){
                 calcButton.execute(calcButton.operator)
             } else {
