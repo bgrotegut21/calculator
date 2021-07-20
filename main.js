@@ -61,7 +61,8 @@ function includesOperator(){
 function subtractionOperator(){
     if (expressionString == "0") expressionString = "-";
     if (expressionString == "-") return;
-    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /-\d+[+/*^!]/.test(expressionString)){
+    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /-\d+[+/*^!]/.test(expressionString) || /\d+[+/*^!]/.test(expressionString) ||
+    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/-\d+\/\d+[+/*^!]/.test(expressionString) ||/\d+\.\d+[+/*^!]/.test(expressionString)){
         expressionString += "-"
     } else {
         return;
@@ -74,8 +75,12 @@ function subtractionOperator(){
 
 
 function testString(string){
-    if (/-\d+[+/*^!]\d+/.test(string) || /-\d+\.\d+[+/*^]\d+\.\d+/.test(string) ) return true;
-    else return false;
+    if (/-\d+[+/*^!-]\d+/.test(string) || /-\d+\.\d+[+/*^-]\d+\.\d+/.test(string) ||  /-\d+\.\d+[+/*^-]-\d+\.\d+/.test(string)  || /-\d+[+/*^!-]-\d+/.test(string) ||
+    /-\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string) || /\d+-\d+/.test(string)  || /\d+\.\d+-\d+\.\d+/.test(string)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -84,7 +89,11 @@ function addOperator(operator){
     let swapOperator;
  
     if (operator == "-") subtractionOperator();
-    if(includesOperator()){
+    console.log(operator)
+    console.log(testString(expressionString))
+    if(testString(expressionString)) {
+        evaluateExpression(expressionString);
+    } else if(includesOperator()){
          evaluateExpression(expressionString);
     } else {
         for (let value of expressionString){
@@ -101,7 +110,6 @@ function addOperator(operator){
         if(fixedOperator){
             expressionString = swapOperator;
         } else {
-            console.log(operator, "operator")
             if (operator != "-") expressionString += operator;
         }
 
