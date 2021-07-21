@@ -63,8 +63,8 @@ function subtractionOperator(){
     if (expressionString == "-") return;
 
 
-    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /-\d+[+/*^!]/.test(expressionString) || /\d+[+/*^!]/.test(expressionString) ||
-    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/-\d+\.\d+[+/*^!]/.test(expressionString) ||/\d+\.\d+[+/*^!]/.test(expressionString)){
+    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!]$/.test(expressionString) || /^\d+[+/*^!]$/.test(expressionString) ||
+    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!]$/.test(expressionString) ||/^\d+\.\d+[+/*^!]$/.test(expressionString) ){
         expressionString += "-"
     } 
 
@@ -107,7 +107,15 @@ function swapOperators (operator){
 }
 
 function addOperator(operator){
-    if(!checkLength()) return;
+    if(!checkLength()) {
+        if(testString(expressionString)) {
+            evaluateExpression(expressionString);
+        } else if(includesOperator()){
+             evaluateExpression(expressionString);
+        } else if (testFactorial(expressionString)){
+            evaluateExpression(expressionString);
+
+    }};
     console.log(operator)
     console.log(testString(expressionString))
     if(testString(expressionString)) {
@@ -123,6 +131,9 @@ function addOperator(operator){
     screenText.textContent = expressionString;
 }
 
+
+
+
 function addition(numbers,operator){
     console.log(numbers)
     let addOperator = false;
@@ -136,6 +147,8 @@ function addition(numbers,operator){
     })
 
     console.log(anwser)
+    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
+
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     screenText.textContent = expressionString
@@ -151,8 +164,7 @@ function checkNegativeNumber(array){
     return false;
 }
 
-function subtraction(numbers,operator){
-    
+function subtraction(numbers,operator,isForm){
     console.log(numbers)
     let addOperator = false;
     let anwser = 0;
@@ -162,9 +174,13 @@ function subtraction(numbers,operator){
             value = 0;
         }
     })
-    anwser = Number(numbers[0]) + Number(numbers[1])
+    console.log(isForm)
+    if(!isForm) anwser = Number(numbers[0]) - Number(numbers[1]);
+    else anwser = Number(numbers[0]) + Number(numbers[1])
+
 
     console.log(anwser)
+    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     screenText.textContent = expressionString
@@ -184,12 +200,14 @@ function multiplication(numbers,operator){
         anwser *= Number(value);
     })
 
+    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     
 }
 
 function division(numbers,operator){
+
     let addOperator = false;
     let anwser = 1;
     numbers.map(value => {
@@ -208,6 +226,7 @@ function division(numbers,operator){
 
         anwser = numbers[0]/numbers[1];
     }
+    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     
@@ -239,6 +258,8 @@ function power(numbers,operator){
     } else {
         anwser = numbers[0];
     }
+
+    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     screenText.textContent = expressionString;
@@ -256,6 +277,7 @@ function findFactorial(numbers){
             return number * factorNumber(number -1);
         }
     }
+    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     expressionString = String(anwser);
 
 }
@@ -274,8 +296,6 @@ function changeNumbers(string){
                 numbers.push("")
                 index += 1;
             }
-
-     
         }
         numbers[index] += char;
     }
@@ -286,9 +306,10 @@ function changeNumbers(string){
 
 function operateNumbers(string,operator){
     let numbers = string.split(operator);
-
+    let isForm = false;
 
     if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
+        isForm = true
         numbers = changeNumbers(string);
     }
 
@@ -298,9 +319,11 @@ function operateNumbers(string,operator){
     if (operator == "^") power(numbers, "^");
 
     if (operator == "!") findFactorial(numbers, "!")
-    if (operator == "-")subtraction(numbers,"-")
+    if (operator == "-")subtraction(numbers,"-",isForm)
+
 
 }
+
 
 
 
@@ -347,12 +370,11 @@ function deleteChar () {
 }
 
 function checkLength(){
-    if(expressionString.length  == 12) return false
+    if(expressionString.length  > 11) return false
     else return true;
 }
 
 function evaluateExpression (string){
-
     for (let value of string){
         if(value == "+") operateNumbers(string,"+");
         if(value == "*") operateNumbers(string, "*");
