@@ -442,7 +442,9 @@ function addDecimal(){
         expressionString += "."
     } else if (/^-\d+\.\d+e[+\-]\d+[\/+\-*!^]\d+$/.test(expressionString)) {
         expressionString += "."
-    }
+    } else if (/^-\d+\.\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
+        expressionString += "."
+    } else if (/^\d+\.\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString))
     screenText.textContent = expressionString;
  
 }
