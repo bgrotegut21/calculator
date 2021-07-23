@@ -399,9 +399,6 @@ function operateNumbers(string,operator){
     if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
         isForm = true
         numbers = changeNumbers(string);
-    } else if (/\d+\.\d+e[+\-]\d+[+\-]/.test(string)){
-        isForm = true;
-        numbers = changeNumbers(string)
     }
 
     console.log(numbers, "numbers")
