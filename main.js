@@ -37,24 +37,24 @@ function clearScreen(){
 
 function includesOperator(){
     if(expressionString.includes("+") && !expressionString.includes("*") && !expressionString.includes("/") && 
-    !expressionString.includes("^")   &&/\d+[*/+^]\d+/.test(expressionString) || /\d+[+]-\d+/.test(expressionString) ||  /\d{11}[+\-*!^]/.test(expressionString)){
+    !expressionString.includes("^")   &&/^\d+[*/+^/]\d+$/.test(expressionString) || /^\d+[+]-\d+$/.test(expressionString) ||  /^\d{9}[+\-*!^/]$/.test(expressionString)){
         return true;
     } else if(expressionString.includes("*") && !expressionString.includes("+") && !expressionString.includes("/") &&
-     !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString) || /\d+[*]-\d+/.test(expressionString) || 
-     /\d{11}[+\-*!^]/.test(expressionString) ){
+     !expressionString.includes("^") &&  !expressionString.includes("!") && /^\d+[*/+^/]\d+$/.test(expressionString) || /^\d+[*]-\d+$/.test(expressionString) || 
+     /^\d{9}[+\-*!/^]$/.test(expressionString) ){
         return true;
     } else if(expressionString.includes("/") && !expressionString.includes("*") && !expressionString.includes("+") && 
-    !expressionString.includes("^") &&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString) || /\d+[/]-\d+/.test(expressionString) || 
-    /\d{11}[+\-*!^]/.test(expressionString)){
+    !expressionString.includes("^") &&  !expressionString.includes("!") && /^\d+[*/+^/]$\d+/.test(expressionString) || /^\d+[/]-\d+$/.test(expressionString) || 
+    /^\d{9}[+\-*!^/]$/.test(expressionString)){
         return true;
     } else if(expressionString.includes("^") && !expressionString.includes("*") && !expressionString.includes("+")  && 
-    !expressionString.includes("/")&&  !expressionString.includes("!") && /\d+[*/+^]\d+/.test(expressionString) || /\d+[\^]-\d+/.test(expressionString) || 
-    /\d{11}[+\-*!^]/.test(expressionString) ) {
+    !expressionString.includes("/")&&  !expressionString.includes("!") && /^\d+[*/+^/]\d+$/.test(expressionString) || /^\d+[\^]-\d+$/.test(expressionString) || 
+    /^\d{9}[+\-*!^/]$/.test(expressionString) ) {
         return true;
         
     } else if (expressionString.includes("!") && !expressionString.includes("*") && !expressionString.includes("+")  && 
-    !expressionString.includes("/")&&  !expressionString.includes("^") && /\d+[*/+^]/.test(expressionString) || /\d{11}[+\-*!^]/.test(expressionString) ||
-     /Error!/.test(expressionString)) {
+    !expressionString.includes("/")&&  !expressionString.includes("^") && /^\d+[*/+^]$/.test(expressionString) || /^\d{9}[+\-*!^/]\d+$/.test(expressionString) ||
+     /^Error!$/.test(expressionString)) {
         return true;
     } else {
         return false;
@@ -68,19 +68,19 @@ function subtractionOperator(){
     if (expressionString == "-") return;
 
 
-    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!]$/.test(expressionString) || /^\d+[+/*^!]$/.test(expressionString) ||
-    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!]$/.test(expressionString) ||/^\d+\.\d+[+/*^!]$/.test(expressionString) || 
-    /^Error[+/*^!]$/.test(expressionString) || /^Error$/.test(expressionString) ){
+    if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!\/]$/.test(expressionString) || /^\d+[+/*^!/]$/.test(expressionString) ||
+    /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!/]$/.test(expressionString) ||/^\d+\.\d+[+/*^!/]$/.test(expressionString) || 
+    /^Error[+/*^!/]$/.test(expressionString) || /^Error$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString)){
         expressionString += "-"
     } 
 
 }
 
 function testString(string){
-    if (/-\d+[+/*^!-]\d+/.test(string) || /-\d+\.\d+[+/*^-]\d+\.\d+/.test(string) ||  /-\d+\.\d+[+/*^-]-\d+\.\d+/.test(string)  || /-\d+[+/*^!-]-\d+/.test(string) ||
-    /-\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string) || /\d+-\d+/.test(string)  || /\d+\.\d+-\d+\.\d+/.test(string)  ||
-    /\d+\.\d+e[+\-]\d+[\/+\-*!^]\d+/.test(string) ||  /Error[+/*^!-]\d+/.test(string) ||  /Error[+/*^!-]-\d+\./.test(string) || /Infinity[+/*^!-]\d+/.test(string) 
-    || /Infinity[+/*^!-]-\d+/.test(string)){
+    if (/-\d+[+/*^!\-/]\d+/.test(string) || /-\d+\.\d+[+/*^\-/]\d+\.\d+/.test(string) ||  /-\d+\.\d+[+/*^\-/]-\d+\.\d+/.test(string)  || /-\d+[+/*^!\-/]-\d+/.test(string) ||
+    /-\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string) || /\d+-\d+/.test(string)  || /\d+\.\d+-\d+\.\d+/.test(string)  || /\d+[+/*^!\-/]\d+/.test(string)||
+    /\d+\.\d+e[+\-]\d+[/+\-*!^]\d+/.test(string) ||  /Error[+/*^!\-]\d+/.test(string) ||  /Error[+/*^!-\-/]-\d+\./.test(string) || /Infinity[+/*^!\-/]\d+/.test(string) 
+    || /Infinity[+/*^!\-/]-\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)){
         return true;
     } else {
         return false;
@@ -99,6 +99,9 @@ function swapInEFomrat(string, operator){
         stringWithOperator += char;
         index += 1;
     }
+
+    console.log(stringWithOperator, "string with operators")
+    
     return stringWithOperator;
 
     
@@ -109,18 +112,27 @@ function swapInEFomrat(string, operator){
 function swapOperators (operator){
     let swapOperator;
     let fixedOperator = false;
-    isExponotinalFormat = false;
-    if(/\d+\.\d+e[+\-]\d+[\/+\-*!^]/.test(expressionString)){
+    let isExponotinalFormat = false;
+    let swapSubtraction = false
+    let normalFormat = false;
+    console.log(operator, "operator")
+    if(/\d+\.\d+e[+\-]\d+[\/+\-*!^]/.test(expressionString) || /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]/.test(expressionString)){
         isExponotinalFormat = true;
         fixedOperator = true;
         if(operator == "-") fixedOperator = false;
     } else if (/\d+\.\d+e[+\-]\d+/.test(expressionString)){
-        fixedOperator = false;
         isExponotinalFormat = true;
 
+    } else if (/\d+-/.test(expressionString) || /\d+\.\d+-/.test(expressionString) || /-\d+-/.test(expressionString) || /-\d+\.\d+/.test(expressionString)){
+        swapSubtraction = true
+        fixedOperator = true;
+    } else {
+        normalFormat = true
     }
 
-    if(!isExponotinalFormat) {
+    console.log(isExponotinalFormat, "exponontenial format")
+
+    if(normalFormat) {
         for (let value of expressionString){
             if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" )  fixedOperator = true;
             if(operator == "-") fixedOperator = false;
@@ -130,9 +142,11 @@ function swapOperators (operator){
             if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
             if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
      } 
-    } else {
-        if(!fixedOperator) swapOperator = swapInEFomrat(expressionString,operator)
+    } else if (isExponotinalFormat) {
+        swapOperator = swapInEFomrat(expressionString,operator)
 
+    } else if (swapSubtraction){
+        swapOperator = expressionString.replace(/\-/g,operator);
     }
      if(fixedOperator){
          expressionString = swapOperator;
@@ -140,19 +154,13 @@ function swapOperators (operator){
          if (operator != "-") expressionString += operator;
          else subtractionOperator();
      }
+     console.log(expressionString, "expression String")
+     console.log(fixedOperator, "fixed operator")
 
 }
 
 function addOperator(operator){
-    if(!checkLength()) {
-        if(testString(expressionString)) {
-            evaluateExpression(expressionString);
-        } else if(includesOperator()){
-             evaluateExpression(expressionString);
-        } else if (testFactorial(expressionString)){
-            evaluateExpression(expressionString);
 
-    }};
 
     if(testString(expressionString)) {
         evaluateExpression(expressionString);
@@ -160,7 +168,7 @@ function addOperator(operator){
          evaluateExpression(expressionString);
     } else if (testFactorial(expressionString)){
         evaluateExpression(expressionString);
-    } else {
+    } else if (checkLength()) {
         swapOperators(operator)
 
     }
@@ -171,6 +179,7 @@ function addOperator(operator){
 
 
 function addition(numbers,operator){
+    console.log(numbers, "addition")
     let addOperator = false;
     let anwser = 0;
     numbers.map(value => {
@@ -180,12 +189,10 @@ function addition(numbers,operator){
         }
         anwser += Number(value);
     })
-    console.log(numbers)
     if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
 
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
-    console.log(anwser);
     screenText.textContent = expressionString
     
 }
@@ -214,11 +221,12 @@ function subtraction(numbers,operator,isForm){
     if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
-    screenText.textContent = expressionString;
     
 }
 
 function multiplication(numbers,operator){
+    console.log(numbers, "Multiplication")
+    console.log("multiply")
 
     let addOperator = false;
     let anwser = 1;
@@ -229,11 +237,10 @@ function multiplication(numbers,operator){
         }
         anwser *= Number(value);
     })
-
-    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
+    if(String(anwser).length >= 8)  anwser = Number(anwser).toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
-    
+    screenText.textContent = expressionString;
 }
 
 function division(numbers,operator){
@@ -244,23 +251,42 @@ function division(numbers,operator){
         if (value == "" || value == "Error"){
             addOperator = true;
 
-            value = number[0] * number[0];
         }
     })
 
     anwser = Number(numbers[0])/Number(numbers[1]);
-    if (numbers[1] == 0 && numbers[0] == 0){
+    if (addOperator){
+        anwser = numbers[0]
+    } else {
+            if (numbers[1] == 0 && numbers[0] == 0){
 
         anwser = "Error"
     } else {
 
         anwser = numbers[0]/numbers[1];
     }
+
+    }
+
     if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     
 }
+
+
+function toPower(number, power){
+    if (power == 0){
+        return 1;
+    } else if (power == 1){
+        return number;
+    } else {
+        let powerNumber = number * number;
+        let powerExponent = power-1
+       return toPower(powerNumber, powerExponent)
+    }
+}
+
 
 function power(numbers,operator){
     let addOperator = false;
@@ -269,34 +295,18 @@ function power(numbers,operator){
         numbers[0] = "Error"
         displayErrorMessage();
         addOperator = true;
-    
+ 
     }
-
     numbers.map(value => {
         let index = 0
         if (value == "" || value == "Error"){
-            numbers[index] = 0;
-
             addOperator = true;
-            index +=1;
         }
+        index +=1;
     })
-    console.log(numbers[0], "Numbers 0 after")
 
     if (!addOperator){
-        function toPower(number, power){
-            if (power == 0){
-                return 1;
-            } else if (power == 1){
-                return number;
-            } else {
-                let powerNumber = number * number;
-                let powerExponent = power-1
-               return toPower(powerNumber, powerExponent)
-            }
-        }
         anwser = toPower(numbers[0],numbers[1])
-
     } else {
         anwser = numbers[0];
     }
@@ -307,12 +317,11 @@ function power(numbers,operator){
 }
 
 function findFactorial(numbers){
-    console.log("Finding factorial")
     let anwser;
     if (numbers[0] == "Error") numbers[0] = "0";
 
 
-    if(expressionString.length > 3 && expressionString != "Error!") {
+    if(expressionString.length > 4 && expressionString != "Error!") {
         anwser= "Error"
         displayErrorMessage();
     }
@@ -345,7 +354,7 @@ function changeNumbers(string){
     let index = 0;
     let  first = false;
     for (let char of string){
-        if (char == "-"){
+        if (char == "-" || char == "+"){
             if (!first){
                 index = 0;
                 first = true
@@ -361,14 +370,41 @@ function changeNumbers(string){
 
 }
 
+function turnEFormatIntoNumber(string,isDecimal){
+    let newString;
+    if (isDecimal){
+        newString = string.replace(/(\d+\.\d+e[+\-]\d+)[/+/\-*!^](\d+\.\d+)/,"$1 $2")
+    } else {
+        newString = string.replace(/(\d+\.\d+e[+\-]\d+)[/+/\-*!^](\d+)/,"$1 $2")
+    }
+    let numbers = newString.split(" ");
+    return numbers
+
+
+    
+
+}
+
+
 function operateNumbers(string,operator){
     let numbers = string.split(operator);
     let isForm = false;
 
+    if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string)) numbers =  turnEFormatIntoNumber(expressionString,false);
+    else if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)) numbers = turnEFormatIntoNumber(expressionString, true);
+
+
+    console.log(numbers, "numbers")
+
     if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
         isForm = true
         numbers = changeNumbers(string);
+    } else if (/\d+\.\d+e[+\-]\d+[+\-]/.test(string)){
+        isForm = true;
+        numbers = changeNumbers(string)
     }
+
+    console.log(numbers, "numbers")
 
     if (operator =="+") addition(numbers,"+")
     if (operator =="*") multiplication(numbers,"*")
@@ -380,6 +416,7 @@ function operateNumbers(string,operator){
 
 
 }
+
 
 
 
@@ -425,8 +462,10 @@ function checkSubtraction(string){
 
 function deleteChar () {
     stringLength = expressionString.length;
-    expressionString = expressionString.slice(0,stringLength-1)
-    if (expressionString == "" || expressionString == "Error") expressionString = "0"
+
+    if ( /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^-\d+\.\d+e[+\-]\d+$/.test(expressionString)) expressionString = "0"
+    else if (expressionString == "" || expressionString == "Error") expressionString = "0"
+    else expressionString = expressionString.slice(0,stringLength-1)
     screenText.textContent = expressionString
 }
 
@@ -435,15 +474,32 @@ function checkLength(){
     else return true;
 }
 
+function testEFormat(string){
+    if(/\d+\.\d+e[+\-]\d+\+\d+/.test(string) || /\d+\.\d+e[+\-]\d+\+\d+\.\d+/.test(string)) operateNumbers(string,"+");
+    if(/\d+\.\d+e[+\-]\d+\*\d+/.test(string) || /\d+\.\d+e[+\-]\d+\*\d+\.\d+/.test(string)) operateNumbers(string,"*");
+    if(/\d+\.\d+e[+\-]\d+\/\d+/.test(string) || /\d+\.\d+e[+\-]\d+\/\d+\.\d+/.test(string)) operateNumbers(string,"/");
+    if(/\d+\.\d+e[+\-]\d+\^\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^\d+\.\d+/.test(string)) operateNumbers(string,"^");
+    if(/\d+\.\d+e[+\-]\d+\!\d+/.test(string) || /\d+\.\d+e[+\-]\d+\!\d+\.\d+/.test(string)) operateNumbers(string,"!");
+    if(/\d+\.\d+e[+\-]\d+\-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\-\d+\.\d+/.test(string)) operateNumbers(string,"-");
+}
+
 function evaluateExpression (string){
-    for (let value of string){
-        if(value == "+") operateNumbers(string,"+");
-        if(value == "*") operateNumbers(string, "*");
-        if(value == "/") operateNumbers(string, "/");
-        if(value == "^") operateNumbers(string, "^");
-        if(value == "!") operateNumbers(string,"!")
+    if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)) {
+        testEFormat(expressionString)
+    } else {
+        for (let value of string){
+            if(value == "+") operateNumbers(string,"+");
+            if(value == "*") operateNumbers(string, "*");
+            if(value == "/") operateNumbers(string, "/");
+            if(value == "^") operateNumbers(string, "^");
+            if(value == "!") operateNumbers(string,"!")
+        }
+        if (checkSubtraction(string)) operateNumbers(string, "-")
+
+
     }
-    if (checkSubtraction(string)) operateNumbers(string, "-")
+
+
 
 }
 
