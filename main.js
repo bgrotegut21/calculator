@@ -107,6 +107,19 @@ function swapInEFomrat(string, operator){
     
 }
 
+function swapExponentinalSubtraction(string,operator){
+
+    let newString = ""
+    for (let char of string){
+        if (char == string[string.length - 1]){
+            newString += operator; 
+        } else {
+            newString += char;
+        }
+    }
+    console.log(newString)
+
+}
 
 
 function swapOperators (operator){
@@ -115,8 +128,9 @@ function swapOperators (operator){
     let isExponotinalFormat = false;
     let swapSubtraction = false
     let normalFormat = false;
+    let exponontenialSubtractionFormat = false;
     console.log(operator, "operator")
-    if(/\d+\.\d+e[+\-]\d+[\/+\-*!^]/.test(expressionString) || /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]/.test(expressionString)){
+    if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /6\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
         isExponotinalFormat = true;
         fixedOperator = true;
         if(operator == "-") fixedOperator = false;
@@ -126,8 +140,13 @@ function swapOperators (operator){
     } else if (/\d+-/.test(expressionString) || /\d+\.\d+-/.test(expressionString) || /-\d+-/.test(expressionString) || /-\d+\.\d+/.test(expressionString)){
         swapSubtraction = true
         fixedOperator = true;
-    } else {
-        normalFormat = true
+
+    } else if (/\d+\.\d+e[+\-]\d+-/.test(expressionString)){
+        exponontenialSubtractionFormat = true;
+        fixedOperator = true;
+    }else if (/\d+[+\-/*!^]/.test(expressionString) || /\d+\.\d+[+\-/*!^]/.test(expressionString) || /\d+\.\d+e[+\-]\d+[+\-/*!^]/) {
+        normalFormat = true;
+        
     }
 
     console.log(isExponotinalFormat, "exponontenial format")
@@ -150,7 +169,7 @@ function swapOperators (operator){
     }
      if(fixedOperator){
          expressionString = swapOperator;
-     } else {
+     }else {
          if (operator != "-") expressionString += operator;
          else subtractionOperator();
      }
@@ -461,10 +480,10 @@ function checkSubtraction(string){
 
 function deleteChar () {
     stringLength = expressionString.length;
-
     if ( /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^-\d+\.\d+e[+\-]\d+$/.test(expressionString)) expressionString = "0"
-    else if (expressionString == "" || expressionString == "Error") expressionString = "0"
+    if (expressionString == "" || expressionString == "Error") expressionString = "0"
     else expressionString = expressionString.slice(0,stringLength-1)
+    if (expressionString == "" || expressionString == "Error") expressionString = "0"
     screenText.textContent = expressionString
 }
 
