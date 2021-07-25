@@ -100,13 +100,14 @@ function swapInEFomrat(string, operator){
         index += 1;
     }
 
-    console.log(stringWithOperator, "string with operators")
+ 
     
     return stringWithOperator;
 
     
 }
 
+<<<<<<< HEAD
 function swapExponentinalSubtraction(string,operator){
 
     let newString = ""
@@ -121,22 +122,40 @@ function swapExponentinalSubtraction(string,operator){
 
 }
 
+=======
+function createOperator(fixedOperator,operator,swapOperator) {
+    if(fixedOperator){
+        expressionString = swapOperator;
+    } else {
+        if (operator != "-") expressionString += operator;
+        else subtractionOperator();
+    }
+}
+>>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
 
 function swapOperators (operator){
     let swapOperator;
     let fixedOperator = false;
     let isExponotinalFormat = false;
-    let swapSubtraction = false
     let normalFormat = false;
     let exponontenialSubtractionFormat = false;
     console.log(operator, "operator")
+<<<<<<< HEAD
     if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /6\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
+=======
+    if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
+>>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
         isExponotinalFormat = true;
         fixedOperator = true;
-        if(operator == "-") fixedOperator = false;
-    } else if (/\d+\.\d+e[+\-]\d+/.test(expressionString)){
-        isExponotinalFormat = true;
+    
+        
+    }else {
+        normalFormat = false;
+    }
+    if (operator == "-" && /\d+\.\d+e[+\-]\d+[\/+\*!^]/.test(expressionString)  ||  /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]/.test(expressionString) ){
+        fixedOperator = false;
 
+<<<<<<< HEAD
     } else if (/\d+-/.test(expressionString) || /\d+\.\d+-/.test(expressionString) || /-\d+-/.test(expressionString) || /-\d+\.\d+/.test(expressionString)){
         swapSubtraction = true
         fixedOperator = true;
@@ -147,8 +166,12 @@ function swapOperators (operator){
     }else if (/\d+[+\-/*!^]/.test(expressionString) || /\d+\.\d+[+\-/*!^]/.test(expressionString) || /\d+\.\d+e[+\-]\d+[+\-/*!^]/) {
         normalFormat = true;
         
+=======
+>>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
     }
 
+    
+    console.log(normalFormat, "normal format")
     console.log(isExponotinalFormat, "exponontenial format")
 
     if(normalFormat) {
@@ -161,20 +184,25 @@ function swapOperators (operator){
             if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
             if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
      } 
+     createOperator(fixedOperator, swapOperator);
     } else if (isExponotinalFormat) {
         swapOperator = swapInEFomrat(expressionString,operator)
+        createOperator(fixedOperator, swapOperator);
 
-    } else if (swapSubtraction){
-        swapOperator = expressionString.replace(/\-/g,operator);
+    } else {
+        createOperator(fixedOperator,operator,swapOperator)
     }
+<<<<<<< HEAD
      if(fixedOperator){
          expressionString = swapOperator;
      }else {
          if (operator != "-") expressionString += operator;
          else subtractionOperator();
      }
+=======
+>>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
      console.log(expressionString, "expression String")
-     console.log(fixedOperator, "fixed operator")
+
 
 }
 
@@ -198,7 +226,6 @@ function addOperator(operator){
 
 
 function addition(numbers,operator){
-    console.log(numbers, "addition")
     let addOperator = false;
     let anwser = 0;
     numbers.map(value => {
@@ -244,9 +271,6 @@ function subtraction(numbers,operator,isForm){
 }
 
 function multiplication(numbers,operator){
-    console.log(numbers, "Multiplication")
-    console.log("multiply")
-
     let addOperator = false;
     let anwser = 1;
     numbers.map(value => {
@@ -339,8 +363,8 @@ function findFactorial(numbers){
     let anwser;
     if (numbers[0] == "Error") numbers[0] = "0";
 
-
-    if(expressionString.length > 4 && expressionString != "Error!") {
+    console.log(expressionString.length, "expression string length")
+    if(expressionString.length >= 4 && expressionString != "Error!") {
         anwser= "Error"
         displayErrorMessage();
     }
@@ -413,14 +437,13 @@ function operateNumbers(string,operator){
     else if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)) numbers = turnEFormatIntoNumber(expressionString, true);
 
 
-    console.log(numbers, "numbers")
+
 
     if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
         isForm = true
         numbers = changeNumbers(string);
     }
 
-    console.log(numbers, "numbers")
 
     if (operator =="+") addition(numbers,"+")
     if (operator =="*") multiplication(numbers,"*")
@@ -443,7 +466,7 @@ function equalExpression () {
 }
 
 function addDecimal(){
-    checkLength();
+   // checkLength();
 
     if (/^[\-]?\d+\.\d+[\/+\-*!^]\d+$/.test(expressionString)){
         expressionString += "."
@@ -565,6 +588,7 @@ function operateButtons(operatorButton){
             } else {
                 calcButton.execute();
             }
+            screenText.textContent = expressionString;
         })
     })
 }
