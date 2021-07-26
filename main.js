@@ -70,7 +70,8 @@ function subtractionOperator(){
 
     if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!\/]$/.test(expressionString) || /^\d+[+/*^!/]$/.test(expressionString) ||
     /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!/]$/.test(expressionString) ||/^\d+\.\d+[+/*^!/]$/.test(expressionString) || 
-    /^Error[+/*^!/]$/.test(expressionString) || /^Error$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString)){
+    /^Error[+/*^!/]$/.test(expressionString) || /^Error$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString) ||
+    /^-\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString)){
         expressionString += "-"
     } 
 
@@ -80,7 +81,7 @@ function testString(string){
     if (/-\d+[+/*^!\-/]\d+/.test(string) || /-\d+\.\d+[+/*^\-/]\d+\.\d+/.test(string) ||  /-\d+\.\d+[+/*^\-/]-\d+\.\d+/.test(string)  || /-\d+[+/*^!\-/]-\d+/.test(string) ||
     /-\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string) || /\d+-\d+/.test(string)  || /\d+\.\d+-\d+\.\d+/.test(string)  || /\d+[+/*^!\-/]\d+/.test(string)||
     /\d+\.\d+e[+\-]\d+[/+\-*!^]\d+/.test(string) ||  /Error[+/*^!\-]\d+/.test(string) ||  /Error[+/*^!-\-/]-\d+\./.test(string) || /Infinity[+/*^!\-/]\d+/.test(string) 
-    || /Infinity[+/*^!\-/]-\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)){
+    || /Infinity[+/*^!\-/]-\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string) ||  /\d+[+/*^!\-/]-\d+/.test(string)){
         return true;
     } else {
         return false;
@@ -107,31 +108,46 @@ function swapInEFomrat(string, operator){
     
 }
 
-<<<<<<< HEAD
-function swapExponentinalSubtraction(string,operator){
-
-    let newString = ""
-    for (let char of string){
-        if (char == string[string.length - 1]){
-            newString += operator; 
-        } else {
-            newString += char;
-        }
-    }
-    console.log(newString)
-
-}
-
-=======
-function createOperator(fixedOperator,operator,swapOperator) {
+function createOperator(fixedOperator,swapOperator , operator) {
     if(fixedOperator){
         expressionString = swapOperator;
     } else {
         if (operator != "-") expressionString += operator;
         else subtractionOperator();
     }
+
 }
->>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
+
+function swapNormalFormat(string,fixedOperator, operator){
+    let swapOperator;
+    for (let value of string){
+        if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" )  fixedOperator = true;
+        if(operator == "-") fixedOperator = false;
+        if (value == "+") swapOperator = string.replace(/\+/g, operator);
+        if (value == "*") swapOperator = string.replace(/\*/g, operator);
+        if (value == "/") swapOperator = string.replace(/\//g, operator);
+        if (value == "^") swapOperator = string.replace(/\^/g, operator);
+        if (value == "!") swapOperator = string.replace(/\!/g, operator);
+
+    }
+    createOperator(fixedOperator,swapOperator, operator);
+}
+
+
+function swapSubtactionFormat(string,fixedOperator, operator){
+    console.log(string.length -1)
+    let newString = ""
+    let firstTime = true;
+    let index = 0;
+    for (let char of string){
+        if (index == string.length -1) newString += operator
+        else newString  += char;
+        index += 1;
+    }
+    swapOperator = newString;
+    createOperator(fixedOperator, swapOperator, operator);
+
+}
 
 function swapOperators (operator){
     let swapOperator;
@@ -139,75 +155,34 @@ function swapOperators (operator){
     let isExponotinalFormat = false;
     let normalFormat = false;
     let exponontenialSubtractionFormat = false;
-    console.log(operator, "operator")
-<<<<<<< HEAD
-    if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /6\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
-=======
-    if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
->>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
-        isExponotinalFormat = true;
-        fixedOperator = true;
+    let swapSubtraction = false;
+    if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
+        if (operator == "-")fixedOperator = false;
+        else fixedOperator = true;
+        swapOperator = swapInEFomrat(expressionString,operator)
+        createOperator(fixedOperator, swapOperator, operator);
     
         
-    }else {
-        normalFormat = false;
-    }
-    if (operator == "-" && /\d+\.\d+e[+\-]\d+[\/+\*!^]/.test(expressionString)  ||  /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]/.test(expressionString) ){
-        fixedOperator = false;
-
-<<<<<<< HEAD
-    } else if (/\d+-/.test(expressionString) || /\d+\.\d+-/.test(expressionString) || /-\d+-/.test(expressionString) || /-\d+\.\d+/.test(expressionString)){
+    }else if (/^\d+-/.test(expressionString) || /^\d+\.\d+-/.test(expressionString)){
         swapSubtraction = true
         fixedOperator = true;
-
-    } else if (/\d+\.\d+e[+\-]\d+-/.test(expressionString)){
-        exponontenialSubtractionFormat = true;
+        swapOperator = expressionString.replace("-",operator)
+        createOperator(fixedOperator,swapOperator,operator);
+    }else if ( /^-\d+-$/.test(expressionString) || /^-\d+\.\d+-$/.test(expressionString)){
         fixedOperator = true;
-    }else if (/\d+[+\-/*!^]/.test(expressionString) || /\d+\.\d+[+\-/*!^]/.test(expressionString) || /\d+\.\d+e[+\-]\d+[+\-/*!^]/) {
-        normalFormat = true;
+        swapSubtactionFormat(expressionString,fixedOperator,operator);
+    } else if (/^\d+[+\-/*!^]$/.test(expressionString) || /^\d+\.\d+[+\-/*!^]$/.test(expressionString)) {
+        swapNormalFormat(expressionString,fixedOperator,operator)
         
-=======
->>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
-    }
-
-    
-    console.log(normalFormat, "normal format")
-    console.log(isExponotinalFormat, "exponontenial format")
-
-    if(normalFormat) {
-        for (let value of expressionString){
-            if(value == "+"|| value =="*"|| value =="/" || value == "^" || value == "!" )  fixedOperator = true;
-            if(operator == "-") fixedOperator = false;
-            if (value == "+") swapOperator = expressionString.replace(/\+/g, operator);
-            if (value == "*") swapOperator = expressionString.replace(/\*/g, operator);
-            if (value == "/") swapOperator = expressionString.replace(/\//g, operator);
-            if (value == "^") swapOperator = expressionString.replace(/\^/g, operator);
-            if (value == "!") swapOperator = expressionString.replace(/\!/g, operator);
-     } 
-     createOperator(fixedOperator, swapOperator);
-    } else if (isExponotinalFormat) {
-        swapOperator = swapInEFomrat(expressionString,operator)
-        createOperator(fixedOperator, swapOperator);
-
     } else {
-        createOperator(fixedOperator,operator,swapOperator)
+        createOperator(fixedOperator, swapOperator, operator)   
     }
-<<<<<<< HEAD
-     if(fixedOperator){
-         expressionString = swapOperator;
-     }else {
-         if (operator != "-") expressionString += operator;
-         else subtractionOperator();
-     }
-=======
->>>>>>> 2edf41c4920b94795da6491e67b8b34e229f48e9
-     console.log(expressionString, "expression String")
+
 
 
 }
 
 function addOperator(operator){
-
 
     if(testString(expressionString)) {
         evaluateExpression(expressionString);
@@ -413,15 +388,22 @@ function changeNumbers(string){
 
 }
 
-function turnEFormatIntoNumber(string,isDecimal){
+function turnEFormatIntoNumber(string,isDecimal,isNegative){
     let newString;
-    if (isDecimal){
-        newString = string.replace(/(\d+\.\d+e[+\-]\d+)[/+/\-*!^](\d+\.\d+)/,"$1 $2")
+    if(!isNegative){
+        if(isDecimal) newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](\d+)/,"$1 $2")
+        console.log(newString, "new string")
     } else {
-        newString = string.replace(/(\d+\.\d+e[+\-]\d+)[/+/\-*!^](\d+)/,"$1 $2")
+        console.log("is negative")
+        console.log(isDecimal, "is decimal")
+        if(isDecimal) newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](-\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](-\d+)/,"$1 $2")
+        
     }
     let numbers = newString.split(" ");
-    return numbers
+    console.log(numbers, "numbers")
+    return numbers;
 
 
     
@@ -433,8 +415,10 @@ function operateNumbers(string,operator){
     let numbers = string.split(operator);
     let isForm = false;
 
-    if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string)) numbers =  turnEFormatIntoNumber(expressionString,false);
-    else if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)) numbers = turnEFormatIntoNumber(expressionString, true);
+    if(/^\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+$/.test(string)) numbers =  turnEFormatIntoNumber(expressionString,false, false);
+    else if(/^\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString, true, false);
+    else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,true, true);
+    else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,false, true);
 
 
 
@@ -486,7 +470,9 @@ function addDecimal(){
         expressionString += "."
     } else if (/^-\d+\.\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
         expressionString += "."
-    } else if (/^\d+\.\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString))
+    } else if (/^\d+\.\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
+        expressionString += "."
+    }
     screenText.textContent = expressionString;
  
 }
@@ -511,7 +497,7 @@ function deleteChar () {
 }
 
 function checkLength(){
-    if(expressionString.length  > 11) return false
+    if(expressionString.length  > 15) return false
     else return true;
 }
 
@@ -521,13 +507,22 @@ function testEFormat(string){
     if(/\d+\.\d+e[+\-]\d+\/\d+/.test(string) || /\d+\.\d+e[+\-]\d+\/\d+\.\d+/.test(string)) operateNumbers(string,"/");
     if(/\d+\.\d+e[+\-]\d+\^\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^\d+\.\d+/.test(string)) operateNumbers(string,"^");
     if(/\d+\.\d+e[+\-]\d+\!\d+/.test(string) || /\d+\.\d+e[+\-]\d+\!\d+\.\d+/.test(string)) operateNumbers(string,"!");
+
+    if(/\d+\.\d+e[+\-]\d+\+-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\+-\d+\.\d+/.test(string)) operateNumbers(string,"+");
+    if(/\d+\.\d+e[+\-]\d+\*-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\*-d+\.\d+/.test(string)) operateNumbers(string,"*");
+    if(/\d+\.\d+e[+\-]\d+\/-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\/-\d+\.\d+/.test(string)) operateNumbers(string,"/");
+    if(/\d+\.\d+e[+\-]\d+\^-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^-\d+\.\d+/.test(string)) operateNumbers(string,"^");
+    if(/\d+\.\d+e[+\-]\d+\!-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\!-\d+\.\d+/.test(string)) operateNumbers(string,"!");
+
+
     if(/\d+\.\d+e[+\-]\d+\-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\-\d+\.\d+/.test(string)) operateNumbers(string,"-");
 }
 
 function evaluateExpression (string){
-    if(/\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)) {
+    if(/\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+/.test(string) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+/.test(string) || 
+    /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+/.test(string)) {
         testEFormat(expressionString)
-    } else {
+    } else if(!/\d+\.\d+e[+\-]\d+/.test(expressionString)) {
         for (let value of string){
             if(value == "+") operateNumbers(string,"+");
             if(value == "*") operateNumbers(string, "*");
@@ -546,7 +541,7 @@ function evaluateExpression (string){
 
 
 function testFactorial(string){
-    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string)) return true;
+    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string)) return true;
     else return false;
     
 }

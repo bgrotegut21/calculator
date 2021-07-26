@@ -41,7 +41,7 @@ section {
 
 h1 {
     font-family: 'Open Sans Condensed', sans-serif;
-    font-size: 72px;
+    font-size: 60px;
     margin-right: 5%;
 
 }
@@ -112,7 +112,7 @@ div:hover {
     }
 
     h1 {
-        font-size: 55px;
+        font-size: 50px;
     }
     div {
         height:70px;
@@ -132,7 +132,7 @@ div:hover {
         line-height: 1px;
     }
     h1 {
-        font-size: 48px;
+        font-size: 36px;
     }
     div {
         height:50px;
@@ -147,7 +147,7 @@ div:hover {
         line-height: 10px;
     }
     h1 {
-        font-size: 28px;
+        font-size: 20px;
     }
     div {   
         font-size: 18px;
@@ -166,6 +166,6 @@ div:hover {
 
 @media only screen and (max-width: 140px){
     h1 {
-        font-size:20px;
+        font-size:10px;
     }
 }
