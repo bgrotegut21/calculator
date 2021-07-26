@@ -336,6 +336,7 @@ function power(numbers,operator){
 
 function findFactorial(numbers){
     let anwser;
+    let isNegative = false;
     if (numbers[0] == "Error") numbers[0] = "0";
 
     console.log(expressionString.length, "expression string length")
@@ -343,16 +344,19 @@ function findFactorial(numbers){
         anwser= "Error"
         displayErrorMessage();
     }
-    else anwser = factorNumber(Number(numbers[0]), Number(numbers[0]))
-    
-
+    else {
+        let number = numbers[0];
+        if (number.includes("-")) number = number.replace("-","");
+        findFactorial(number)
+    }
     function factorNumber(number){
-        if( number == 0 || number == 1){
+        if( number === 0 ){
             return 1;
         } else {
             return number * factorNumber(number -1);
         }
     }
+    if (isNegative) anwser = -anwser;
     if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     expressionString = String(anwser);
 
