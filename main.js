@@ -293,28 +293,19 @@ function division(numbers,operator){
 }
 
 
-function toPower(number, power){
-    if (power == 0){
-        return 1;
-    } else if (power == 1){
-        return number;
-    } else {
-        let powerNumber = number * number;
-        let powerExponent = power-1
-       return toPower(powerNumber, powerExponent)
-    }
-}
-
 
 function power(numbers,operator){
     let addOperator = false;
     let anwser = 1;
-    if(String(numbers[1]).length > 3 && String(numbers[0]) != "Error") {
-        numbers[0] = "Error"
-        displayErrorMessage();
+    
+    console.log(String(numbers[1],"string number one"))
+    console.log(String(numbers[1]).length > 3)
+    if(String(numbers[1]).length > 3 && String(numbers[0]) != "Error" && String(numbers[0]) != "0" && String(numbers[0]) != "1") {
+        numbers[0] = "Infinity"
         addOperator = true;
  
     }
+
     numbers.map(value => {
         let index = 0
         if (value == "" || value == "Error"){
@@ -322,13 +313,13 @@ function power(numbers,operator){
         }
         index +=1;
     })
-
+    console.log(addOperator, "add operator")
     if (!addOperator){
-        anwser = toPower(numbers[0],numbers[1])
+        anwser = numbers[0] ** numbers[1];
     } else {
         anwser = numbers[0];
     }
-    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
+    if(String(anwser).length >= 8)  anwser = Number(anwser).toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
     screenText.textContent = expressionString;
@@ -344,25 +335,32 @@ function factorNumber(number){
 }
 
 function findFactorial(numbers){
+
     let anwser;
     let isNegative = false;
-    let numberLength = 4
+    let numberLength = 5
     if (numbers[0] == "Error") numbers[0] = "0";
-
+    if(/\d+\.\d+/.test(String(numbers[0])) || /-\d+\.\d+/.test(String(numbers[0]))) {
+        anwser = "Error";
+        expressionString = anwser;
+        displayErrorMessage()
+        return;
+    }
     console.log(expressionString.length, "expression string length")
     if(numbers[0].includes("-")) isNegative = true;
-    if(isNegative) numberLength = 5;
-    if(expressionString.length >= numberLength && expressionString != "Error") {
-        anwser= "Error"
-        displayErrorMessage();
+    if(isNegative) numberLength = 6;
+    console.log(numberLength)
+    if(expressionString.length >= numberLength && expressionString != "Error!") {
+        anwser= "Infinity"
     } else {
         let number = numbers[0];
         if(isNegative && expressionString != "Error") number = number.replace("-","");
         anwser = factorNumber(number);
     }
 
+    console.log(anwser, "number")
     if (isNegative) anwser = -anwser;
-    if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
+    if(String(anwser).length >= 8  && String(anwser) != "Infinity")  anwser = Number(anwser).toExponential(1)
     expressionString = String(anwser);
 
 }
@@ -550,7 +548,8 @@ function evaluateExpression (string){
 
 
 function testFactorial(string){
-    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string)) return true;
+    console.log(/\d+\.\d+e[+\-]\d+!/.test(string), "matches e format")
+    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string) || /\d+\.\d+e[+\-]\d+!/.test(string)) return true;
     else return false;
     
 }
