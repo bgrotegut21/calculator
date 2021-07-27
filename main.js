@@ -71,7 +71,7 @@ function subtractionOperator(){
     if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!\/]$/.test(expressionString) || /^\d+[+/*^!/]$/.test(expressionString) ||
     /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!/]$/.test(expressionString) ||/^\d+\.\d+[+/*^!/]$/.test(expressionString) || 
     /^Error[+/*^!/]$/.test(expressionString) || /^Error$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString) ||
-    /^-\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString)){
+    /^-\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString) ||/\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(expressionString) ){
         expressionString += "-"
     } 
 
@@ -81,7 +81,8 @@ function testString(string){
     if (/-\d+[+/*^!\-/]\d+/.test(string) || /-\d+\.\d+[+/*^\-/]\d+\.\d+/.test(string) ||  /-\d+\.\d+[+/*^\-/]-\d+\.\d+/.test(string)  || /-\d+[+/*^!\-/]-\d+/.test(string) ||
     /-\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string) || /\d+-\d+/.test(string)  || /\d+\.\d+-\d+\.\d+/.test(string)  || /\d+[+/*^!\-/]\d+/.test(string)||
     /\d+\.\d+e[+\-]\d+[/+\-*!^]\d+/.test(string) ||  /Error[+/*^!\-]\d+/.test(string) ||  /Error[+/*^!-\-/]-\d+\./.test(string) || /Infinity[+/*^!\-/]\d+/.test(string) 
-    || /Infinity[+/*^!\-/]-\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string) ||  /\d+[+/*^!\-/]-\d+/.test(string)){
+    || /Infinity[+/*^!\-/]-\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string) ||  /\d+[+/*^!\-/]-\d+/.test(string) ||
+    /\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(string)){
         return true;
     } else {
         return false;
@@ -135,7 +136,6 @@ function swapNormalFormat(string,fixedOperator, operator){
 
 
 function swapSubtactionFormat(string,fixedOperator, operator){
-    console.log(string.length -1)
     let newString = ""
     let firstTime = true;
     let index = 0;
@@ -152,11 +152,8 @@ function swapSubtactionFormat(string,fixedOperator, operator){
 function swapOperators (operator){
     let swapOperator;
     let fixedOperator = false;
-    let isExponotinalFormat = false;
-    let normalFormat = false;
-    let exponontenialSubtractionFormat = false;
-    let swapSubtraction = false;
-    if(/^\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)){
+    if(/\d+\.\d+e[+\-]\d+[\/+\-*!^]$/.test(expressionString) || /\d+\.\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString) || 
+    /\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString) || /\d+e[+\-]\d+\.\d+[\/+\-*!^]$/.test(expressionString)) {
         if (operator == "-")fixedOperator = false;
         else fixedOperator = true;
         swapOperator = swapInEFomrat(expressionString,operator)
@@ -183,7 +180,6 @@ function swapOperators (operator){
 }
 
 function addOperator(operator){
-    console.log("operator")
     if(testString(expressionString)) {
         evaluateExpression(expressionString);
     } else if(includesOperator()){
@@ -228,6 +224,7 @@ function checkNegativeNumber(array){
 }
 
 function subtraction(numbers,operator,isForm){
+
     let addOperator = false;
     let anwser = 0;
     numbers.map(value => {
@@ -297,9 +294,6 @@ function division(numbers,operator){
 function power(numbers,operator){
     let addOperator = false;
     let anwser = 1;
-    
-    console.log(String(numbers[1],"string number one"))
-    console.log(String(numbers[1]).length > 3)
     if(String(numbers[1]).length > 3 && String(numbers[0]) != "Error" && String(numbers[0]) != "0" && String(numbers[0]) != "1") {
         numbers[0] = "Infinity"
         addOperator = true;
@@ -313,7 +307,6 @@ function power(numbers,operator){
         }
         index +=1;
     })
-    console.log(addOperator, "add operator")
     if (!addOperator){
         anwser = numbers[0] ** numbers[1];
     } else {
@@ -335,10 +328,10 @@ function factorNumber(number){
 }
 
 function findFactorial(numbers){
-
     let anwser;
     let isNegative = false;
     let numberLength = 5
+
     if (numbers[0] == "Error") numbers[0] = "0";
     if(/\d+\.\d+/.test(String(numbers[0])) || /-\d+\.\d+/.test(String(numbers[0]))) {
         anwser = "Error";
@@ -346,20 +339,18 @@ function findFactorial(numbers){
         displayErrorMessage()
         return;
     }
-    console.log(expressionString.length, "expression string length")
+
     if(numbers[0].includes("-")) isNegative = true;
     if(isNegative) numberLength = 6;
-    console.log(numberLength)
-    console.log(expressionString, "expression string")
+
     if(expressionString.length >= numberLength && expressionString != "Error!") {
         anwser= "Infinity"
-    } else if (expressionString != "Error!") {
+    } else if (anwser != "Error") {
         let number = numbers[0];
-        if(isNegative && expressionString != "Error") number = number.replace("-","");
-        anwser = factorNumber(number);
-    } else 
-    console.log(anwser, "number")
-    if (isNegative) anwser = -anwser;
+        if(isNegative) number = number.replace("-","");
+        anwser = factorNumber(Number(number));
+    }
+    if (isNegative && anwser != "Error") anwser = -anwser;
     if(String(anwser).length >= 8  && String(anwser) != "Infinity")  anwser = Number(anwser).toExponential(1)
     expressionString = String(anwser);
 
@@ -400,16 +391,54 @@ function turnEFormatIntoNumber(string,isDecimal,isNegative){
     if(!isNegative){
         if(isDecimal) newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](\d+\.\d+)/,"$1 $2")
         else newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](\d+)/,"$1 $2")
-        console.log(newString, "new string")
     } else {
-        console.log("is negative")
-        console.log(isDecimal, "is decimal")
         if(isDecimal) newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](-\d+\.\d+)/,"$1 $2")
         else newString = string.replace(/(\d+\.\d+e[+\-]\d+)[+\-*\/!^](-\d+)/,"$1 $2")
         
     }
     let numbers = newString.split(" ");
-    console.log(numbers, "numbers")
+    return numbers;
+
+}
+
+function turnEFormatIntoNegativeNumber(string,isDecimal,isNegative){
+    let newString;
+    if(!isNegative){
+        if(isDecimal) newString = string.replace(/(-\d+\.\d+e[+\-]\d+)[+\-*\/!^](\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(-\d+\.\d+e[+\-]\d+)[+\-*\/!^](\d+)/,"$1 $2")
+    } else {
+        if(isDecimal) newString = string.replace(/(-\d+\.\d+e[+\-]\d+)[+\-*\/!^](-\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(-\d+\.\d+e[+\-]\d+)[+\-*\/!^](-\d+)/,"$1 $2")
+        
+    }
+    let numbers = newString.split(" ");
+    return numbers;
+}
+
+function turnEFormatIntoNormalNegativeNumber(string,isDecimal,isNegative){
+    let newString;
+    if(!isNegative){
+        if(isDecimal) newString = string.replace(/(-\d+e[+\-]\d+)[+\-*\/!^](\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(-\d+e[+\-]\d+)[+\-*\/!^](\d+)/,"$1 $2")
+    } else {
+        if(isDecimal) newString = string.replace(/(-\d+e[+\-]\d+)[+\-*\/!^](-\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(-\d+e[+\-]\d+)[+\-*\/!^](-\d+)/,"$1 $2")
+        
+    }
+    let numbers = newString.split(" ");
+    return numbers;
+}
+function turnEFormatIntoNormaloNumber(string,isDecimal,isNegative){
+    let newString;
+    if(!isNegative){
+        if(isDecimal) newString = string.replace(/(\d+e[+\-]\d+)[+\-*\/!^](\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(\d+e[+\-]\d+)[+\-*\/!^](\d+)/,"$1 $2")
+    } else {
+        if(isDecimal) newString = string.replace(/(\d+e[+\-]\d+)[+\-*\/!^](-\d+\.\d+)/,"$1 $2")
+        else newString = string.replace(/(\d+e[+\-]\d+)[+\-*\/!^](-\d+)/,"$1 $2")
+        
+    }
+    let numbers = newString.split(" ");
     return numbers;
 
 }
@@ -419,12 +448,32 @@ function operateNumbers(string,operator){
 
     let numbers = string.split(operator);
     let isForm = false;
-
-    console.log(numbers, "numbers")
     if(/^\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+$/.test(string)) numbers =  turnEFormatIntoNumber(expressionString,false, false);
     else if(/^\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString, true, false);
     else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,true, true);
     else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,false, true);
+
+    if(/^-\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+$/.test(string)) numbers =  turnEFormatIntoNegativeNumber(expressionString,false, false);
+    else if(/^-\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNegativeNumber(expressionString, true, false);
+    else if (/^-\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNegativeNumber(expressionString,true, true);
+    else if (/^-\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNegativeNumber(expressionString,false, true);
+
+
+    console.log(numbers, "numbers")
+
+
+
+
+   // if(/^\d+e[+\-]\d+[+\-*\/!^]\d+$/.test(string)) numbers =  turnEFormatIntoNromalNumber(expressionString,false, false);
+   // else if(/^\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNormalNumber(expressionString, true, false);
+  //  else if (/^\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNormalNumber(expressionString,true, true);
+   // else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNormalNumber(expressionString,false, true);
+
+  //  if(/^-\d+e[+\-]\d+[+\-*\/!^]\d+$/.test(string)) numbers =  turnEFormatIntoNormalNegativeNumber(expressionString,false, false);
+ //   else if(/^-\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNormalNegativeNumber(expressionString, true, false);
+   // else if (/^-\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNormalNegativeNumber(expressionString,true, true);
+   // else if (/^-\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNormalNegativeNumber(expressionString,false, true);
+
 
 
 
@@ -478,6 +527,14 @@ function addDecimal(){
         expressionString += "."
     } else if (/^\d+\.\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
         expressionString += "."
+    } else if (/^\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
+        expressionString += "."
+    } else if (/^\d+e[+\-]\d+[\/+\-*!^]\d+$/.test(expressionString)) {
+        expressionString += "."
+    } else if (/^-\d+e[+\-]\d+[\/+\-*!^]-\d+$/.test(expressionString)) {
+        expressionString += "."
+    } else if (/^-\d+e[+\-]\d+[\/+\-*!^]\d+$/.test(expressionString)) {
+        expressionString += ".";
     }
     screenText.textContent = expressionString;
  
@@ -507,12 +564,26 @@ function checkLength(){
     else return true;
 }
 
+function testNonDecimalEFormat(string){
+    if(/\d+e[+\-]\d+\+\d+/.test(string) || /\d+e[+\-]\d+\+\d+\.\d+/.test(string)) operateNumbers(string,"+");
+    if(/\d+e[+\-]\d+\*\d+/.test(string) || /\d+e[+\-]\d+\*\d+\.\d+/.test(string)) operateNumbers(string,"*");
+    if(/\d+e[+\-]\d+\/\d+/.test(string) || /\d+e[+\-]\d+\/\d+\.\d+/.test(string)) operateNumbers(string,"/");
+    if(/\d+e[+\-]\d+\^\d+/.test(string) || /\d+e[+\-]\d+\^\d+\.\d+/.test(string)) operateNumbers(string,"^");
+    if(/\d+e[+\-]\d+\!/.test(string)) operateNumbers(string,"!");
+
+    if(/\d+e[+\-]\d+\+-\d+/.test(string) || /\d+e[+\-]\d+\+-\d+\.\d+/.test(string)) operateNumbers(string,"+");
+    if(/\d+e[+\-]\d+\*-\d+/.test(string) || /\d+e[+\-]\d+\*-d+\.\d+/.test(string)) operateNumbers(string,"*");
+    if(/\d+e[+\-]\d+\/-\d+/.test(string) || /\d+e[+\-]\d+\/-\d+\.\d+/.test(string)) operateNumbers(string,"/");
+    if(/\d+e[+\-]\d+\^-\d+/.test(string) || /\d+e[+\-]\d+\^-\d+\.\d+/.test(string)) operateNumbers(string,"^")
+
+    if(/\d+e[+\-]\d+\-\d+/.test(string) || /\d+e[+\-]\d+\-\d+\.\d+/.test(string)) operateNumbers(string,"-");
+}
+
 function testEFormat(string){
     if(/\d+\.\d+e[+\-]\d+\+\d+/.test(string) || /\d+\.\d+e[+\-]\d+\+\d+\.\d+/.test(string)) operateNumbers(string,"+");
     if(/\d+\.\d+e[+\-]\d+\*\d+/.test(string) || /\d+\.\d+e[+\-]\d+\*\d+\.\d+/.test(string)) operateNumbers(string,"*");
     if(/\d+\.\d+e[+\-]\d+\/\d+/.test(string) || /\d+\.\d+e[+\-]\d+\/\d+\.\d+/.test(string)) operateNumbers(string,"/");
     if(/\d+\.\d+e[+\-]\d+\^\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^\d+\.\d+/.test(string)) operateNumbers(string,"^");
-    console.log(string, "number string")
     if(/\d+\.\d+e[+\-]\d+\!/.test(string)) operateNumbers(string,"!");
 
     if(/\d+\.\d+e[+\-]\d+\+-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\+-\d+\.\d+/.test(string)) operateNumbers(string,"+");
@@ -521,10 +592,12 @@ function testEFormat(string){
     if(/\d+\.\d+e[+\-]\d+\^-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^-\d+\.\d+/.test(string)) operateNumbers(string,"^")
 
     if(/\d+\.\d+e[+\-]\d+\-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\-\d+\.\d+/.test(string)) operateNumbers(string,"-");
+    testNonDecimalEFormat(string);
+
+
 }
 
 function evaluateExpression (string){
-    console.log("expression is being evaluated")
     if(/\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+/.test(string) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+/.test(string) || 
     /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+/.test(string) ||/\d+\.\d+e[+\-]\d+\!/.test(string)   )  {
         testEFormat(expressionString)
@@ -547,7 +620,6 @@ function evaluateExpression (string){
 
 
 function testFactorial(string){
-    console.log(/\d+\.\d+e[+\-]\d+!/.test(string))
     if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string) ) return true;
     else if (/\d+\.\d+e[+\-]\d+!/.test(string)) return true;
     else return false;
