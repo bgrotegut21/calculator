@@ -334,28 +334,33 @@ function power(numbers,operator){
     screenText.textContent = expressionString;
 }
 
+
+function factorNumber(number){
+    if( number === 0 ){
+        return 1;
+    } else {
+        return number * factorNumber(number -1);
+    }
+}
+
 function findFactorial(numbers){
     let anwser;
     let isNegative = false;
+    let numberLength = 4
     if (numbers[0] == "Error") numbers[0] = "0";
 
     console.log(expressionString.length, "expression string length")
-    if(expressionString.length >= 4 && expressionString != "Error!") {
+    if(numbers[0].includes("-")) isNegative = true;
+    if(isNegative) numberLength = 5;
+    if(expressionString.length >= numberLength && expressionString != "Error") {
         anwser= "Error"
         displayErrorMessage();
-    }
-    else {
+    } else {
         let number = numbers[0];
-        if (number.includes("-")) number = number.replace("-","");
-        findFactorial(number)
+        if(isNegative && expressionString != "Error") number = number.replace("-","");
+        anwser = factorNumber(number);
     }
-    function factorNumber(number){
-        if( number === 0 ){
-            return 1;
-        } else {
-            return number * factorNumber(number -1);
-        }
-    }
+
     if (isNegative) anwser = -anwser;
     if(String(anwser).length >= 8)  anwser = anwser.toExponential(1)
     expressionString = String(anwser);
