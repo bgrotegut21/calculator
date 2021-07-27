@@ -350,14 +350,14 @@ function findFactorial(numbers){
     if(numbers[0].includes("-")) isNegative = true;
     if(isNegative) numberLength = 6;
     console.log(numberLength)
+    console.log(expressionString, "expression string")
     if(expressionString.length >= numberLength && expressionString != "Error!") {
         anwser= "Infinity"
-    } else {
+    } else if (expressionString != "Error!") {
         let number = numbers[0];
         if(isNegative && expressionString != "Error") number = number.replace("-","");
         anwser = factorNumber(number);
-    }
-
+    } else 
     console.log(anwser, "number")
     if (isNegative) anwser = -anwser;
     if(String(anwser).length >= 8  && String(anwser) != "Infinity")  anwser = Number(anwser).toExponential(1)
@@ -416,16 +416,18 @@ function turnEFormatIntoNumber(string,isDecimal,isNegative){
 
 
 function operateNumbers(string,operator){
+
     let numbers = string.split(operator);
     let isForm = false;
 
+    console.log(numbers, "numbers")
     if(/^\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+$/.test(string)) numbers =  turnEFormatIntoNumber(expressionString,false, false);
     else if(/^\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString, true, false);
     else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,true, true);
     else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,false, true);
 
 
-    console.log(numbers, "numbers")
+
 
     if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
         isForm = true
@@ -510,21 +512,21 @@ function testEFormat(string){
     if(/\d+\.\d+e[+\-]\d+\*\d+/.test(string) || /\d+\.\d+e[+\-]\d+\*\d+\.\d+/.test(string)) operateNumbers(string,"*");
     if(/\d+\.\d+e[+\-]\d+\/\d+/.test(string) || /\d+\.\d+e[+\-]\d+\/\d+\.\d+/.test(string)) operateNumbers(string,"/");
     if(/\d+\.\d+e[+\-]\d+\^\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^\d+\.\d+/.test(string)) operateNumbers(string,"^");
-    if(/\d+\.\d+e[+\-]\d+\!\d+/.test(string) || /\d+\.\d+e[+\-]\d+\!\d+\.\d+/.test(string)) operateNumbers(string,"!");
+    console.log(string, "number string")
+    if(/\d+\.\d+e[+\-]\d+\!/.test(string)) operateNumbers(string,"!");
 
     if(/\d+\.\d+e[+\-]\d+\+-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\+-\d+\.\d+/.test(string)) operateNumbers(string,"+");
     if(/\d+\.\d+e[+\-]\d+\*-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\*-d+\.\d+/.test(string)) operateNumbers(string,"*");
     if(/\d+\.\d+e[+\-]\d+\/-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\/-\d+\.\d+/.test(string)) operateNumbers(string,"/");
-    if(/\d+\.\d+e[+\-]\d+\^-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^-\d+\.\d+/.test(string)) operateNumbers(string,"^");
-    if(/\d+\.\d+e[+\-]\d+\!-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\!-\d+\.\d+/.test(string)) operateNumbers(string,"!");
-
+    if(/\d+\.\d+e[+\-]\d+\^-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\^-\d+\.\d+/.test(string)) operateNumbers(string,"^")
 
     if(/\d+\.\d+e[+\-]\d+\-\d+/.test(string) || /\d+\.\d+e[+\-]\d+\-\d+\.\d+/.test(string)) operateNumbers(string,"-");
 }
 
 function evaluateExpression (string){
+    console.log("expression is being evaluated")
     if(/\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+/.test(string) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]\d+\.\d+/.test(string) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+/.test(string) || 
-    /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+/.test(string)) {
+    /\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+\.\d+/.test(string) ||/\d+\.\d+e[+\-]\d+\!/.test(string)   )  {
         testEFormat(expressionString)
     } else if(!/\d+\.\d+e[+\-]\d+/.test(expressionString)) {
         for (let value of string){
@@ -545,7 +547,9 @@ function evaluateExpression (string){
 
 
 function testFactorial(string){
-    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string) || /\d+\.\d+e[+\-]\d+!/.test(string)) return true;
+    console.log(/\d+\.\d+e[+\-]\d+!/.test(string))
+    if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string) ) return true;
+    else if (/\d+\.\d+e[+\-]\d+!/.test(string)) return true;
     else return false;
     
 }
