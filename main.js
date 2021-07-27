@@ -183,7 +183,7 @@ function swapOperators (operator){
 }
 
 function addOperator(operator){
-
+    console.log("operator")
     if(testString(expressionString)) {
         evaluateExpression(expressionString);
     } else if(includesOperator()){
@@ -412,9 +412,6 @@ function turnEFormatIntoNumber(string,isDecimal,isNegative){
     console.log(numbers, "numbers")
     return numbers;
 
-
-    
-
 }
 
 
@@ -428,7 +425,7 @@ function operateNumbers(string,operator){
     else if (/^\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNumber(expressionString,false, true);
 
 
-
+    console.log(numbers, "numbers")
 
     if(/-\d+-\d+/.test(string) || /-\d+\.\d+-\d+/.test(string) || /-\d+\.\d+-\d+\.\d+/.test(string)){
         isForm = true
@@ -548,7 +545,6 @@ function evaluateExpression (string){
 
 
 function testFactorial(string){
-    console.log(/\d+\.\d+e[+\-]\d+!/.test(string), "matches e format")
     if (/\d+!/.test(string) || /\d+\.\d+!/.test(string) || /-\d+!/.test(string) || /-\d+\.\d+!/.test(string) || /\d+\.\d+e[+\-]\d+!/.test(string)) return true;
     else return false;
     
