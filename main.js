@@ -71,7 +71,7 @@ function subtractionOperator(){
     if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!\/]$/.test(expressionString) || /^\d+[+/*^!/]$/.test(expressionString) ||
     /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!/]$/.test(expressionString) ||/^\d+\.\d+[+/*^!/]$/.test(expressionString) || 
     /^Error[+/*^!/]$/.test(expressionString) || /^Error$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+$/.test(expressionString) || /^\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString) ||
-    /^-\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString) ||/\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(expressionString) ){
+    /^-\d+\.\d+e[+\-]\d+[*+/^!/]$/.test(expressionString) ||/\d+e[+\-]\d+[/+/\-*!^]\d+\.\d+/.test(expressionString) ||  /^-\d+\.\d+e[+\-]\d+$/.test(expressionString) ||  /^-\d+\.\d+e[+\-]\d+$/.test(expressionString)){
         expressionString += "-"
     } 
 
@@ -113,8 +113,8 @@ function createOperator(fixedOperator,swapOperator , operator) {
     if(fixedOperator){
         expressionString = swapOperator;
     } else {
-        if (operator != "-") expressionString += operator;
-        else subtractionOperator();
+        if (operator != "-" && /\d+$/.test(expressionString) || /\d+\.\d+e[+\-]\d+$/.test(expressionString)) expressionString += operator;
+        else if(operator == "-") subtractionOperator();
     }
 
 }
@@ -228,6 +228,7 @@ function checkNegativeNumber(array){
 }
 
 function subtraction(numbers,operator,isForm){
+    console.log(numbers,"subtraction numbers")
 
     let addOperator = false;
     let anwser = 0;
@@ -299,11 +300,7 @@ function division(numbers,operator){
 function power(numbers,operator){
     let addOperator = false;
     let anwser = 1;
-    if(String(numbers[1]).length > 3 && String(numbers[0]) != "Error" && String(numbers[0]) != "0" && String(numbers[0]) != "1") {
-        numbers[0] = "Infinity"
-        addOperator = true;
- 
-    }
+
 
     numbers.map(value => {
         let index = 0
@@ -313,13 +310,18 @@ function power(numbers,operator){
         index +=1;
     })
     if (!addOperator){
-        anwser = numbers[0] ** numbers[1];
+        anwser = Math.pow(Number(numbers[0]),Number(numbers[1]))
     } else {
-        anwser = numbers[0];
+        anwser = Number(numbers[0]);
     }
+
     if(String(anwser).length >= 8  || /\d+e\-\d+/.test(String(anwser)))  anwser = Number(anwser).toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
+    if(String(anwser) == "NaN") {
+        anwser = "Error"
+        expressionString = anwser;
+    }
     screenText.textContent = expressionString;
 }
 
@@ -402,6 +404,7 @@ function turnEFormatIntoNumber(string,isDecimal,isNegative){
         
     }
     let numbers = newString.split(" ");
+    console.log(numbers, "numbers in e format")
     return numbers;
 
 }
@@ -420,8 +423,22 @@ function turnEFormatIntoNegativeNumber(string,isDecimal,isNegative){
     return numbers;
 }
 
+function chageNumbersInENegativeFormat(string,isNegative){
+    let replacedString;
+    let numbers
+    console.log(isNegative, "is negative")
+    if (!isNegative) replacedString = string.replace(/(\d+\.\d+e-\d+)-(\d+)/,"$1 $2");
+    else replacedString = string.replace(/(-\d+\.\d+e-\d+)(-\d+)/,"$1 $2");
+    numbers = replacedString.split(" ")
+    console.log(numbers, "e negatice numbers")
+    return numbers
+}
+
+
 
 function operateNumbers(string,operator){
+
+    if(/\d+\.\d+[+\-*\/!^]-$/.test(expressionString) || /\d+[+\-*\/!^]-$/.test(expressionString) || /\d+\.\d+e[+\-]\d+[+\-*\/!^]-$/.test(expressionString)) return;
 
     let numbers = string.split(operator);
     let isForm = false;
@@ -437,9 +454,6 @@ function operateNumbers(string,operator){
     else if (/^-\d+\.\d+e[+\-]\d+[+\-*\/!^]-\d+$/.test(string)) numbers = turnEFormatIntoNegativeNumber(expressionString,false, true);
 
 
-    console.log(numbers, "numbers")
-
-
 
 
 
@@ -450,7 +464,14 @@ function operateNumbers(string,operator){
         isForm = true
         numbers = changeNumbers(string);
     }
+    console.log(string)
+    if(/^\d+\.\d+e-\d+-\d+/.test(string)) numbers = chageNumbersInENegativeFormat(string, false);
+    else if (/^-\d+\.\d+e-\d+-\d+/.test(string)) {
+        isForm = true;
+        numbers = chageNumbersInENegativeFormat(string,true);
+    }
 
+    console.log(numbers, "numbers")
 
     if (operator =="+") addition(numbers,"+")
     if (operator =="*") multiplication(numbers,"*")
