@@ -59,14 +59,12 @@ function includesOperator(){
     } else {
         return false;
     }
-
 }
 
 function subtractionOperator(){
     if (testFactorial(expressionString)) return;
     if (expressionString == "0") expressionString = "-";
     if (expressionString == "-") return;
-
 
     if( /^-\d+$/g.test(expressionString) || /^\d+$/g.test(expressionString) || /^-\d+[+/*^!\/]$/.test(expressionString) || /^\d+[+/*^!/]$/.test(expressionString) ||
     /^-\d+\.\d+$/g.test(expressionString) || /^\d+\.\d+$/g.test(expressionString) ||/^-\d+\.\d+[+/*^!/]$/.test(expressionString) ||/^\d+\.\d+[+/*^!/]$/.test(expressionString) || 
@@ -101,12 +99,7 @@ function swapInEFomrat(string, operator){
         stringWithOperator += char;
         index += 1;
     }
-
- 
-    
     return stringWithOperator;
-
-    
 }
 
 function createOperator(fixedOperator,swapOperator , operator) {
@@ -157,9 +150,7 @@ function swapOperators (operator){
         if (operator == "-")fixedOperator = false;
         else fixedOperator = true;
         swapOperator = swapInEFomrat(expressionString,operator)
-        createOperator(fixedOperator, swapOperator, operator);
-    
-        
+        createOperator(fixedOperator, swapOperator, operator)
     }else if (/^\d+-/.test(expressionString) || /^\d+\.\d+-/.test(expressionString)){
         swapSubtraction = true
         fixedOperator = true;
@@ -174,9 +165,6 @@ function swapOperators (operator){
     } else {
         createOperator(fixedOperator, swapOperator, operator)   
     }
-
-
-
 }
 
 function addOperator(operator){
@@ -192,7 +180,6 @@ function addOperator(operator){
     } else if (checkLength()) {
         swapOperators(operator)
         return;
-
     }
     screenText.textContent = expressionString;
 }
@@ -211,11 +198,9 @@ function addition(numbers,operator){
         anwser += Number(value);
     })
     if(String(anwser).length >= 8 || /\d+e\-\d+/.test(String(anwser)))  anwser = anwser.toExponential(1)
-
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
-    screenText.textContent = expressionString
-    
+    screenText.textContent = expressionString   
 }
 
 function checkNegativeNumber(array){
@@ -228,8 +213,6 @@ function checkNegativeNumber(array){
 }
 
 function subtraction(numbers,operator,isForm){
-    console.log(numbers,"subtraction numbers")
-
     let addOperator = false;
     let anwser = 0;
     numbers.map(value => {
@@ -240,7 +223,6 @@ function subtraction(numbers,operator,isForm){
     })
     if(!isForm) anwser = Number(numbers[0]) - Number(numbers[1]);
     else anwser = Number(numbers[0]) + Number(numbers[1])
-
     if(String(anwser).length >= 8 || /\d+e\-\d+/.test(String(anwser)))  anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
     else expressionString = String(anwser) + operator;
@@ -264,30 +246,23 @@ function multiplication(numbers,operator){
 }
 
 function division(numbers,operator){
-
     let addOperator = false;
     let anwser = 1;
     numbers.map(value => {
         if (value == "" || value == "Error"){
             addOperator = true;
-
         }
     })
-
     anwser = Number(numbers[0])/Number(numbers[1]);
     if (addOperator){
         anwser = numbers[0]
     } else {
-            if (numbers[1] == 0 && numbers[0] == 0){
-
+        if (numbers[1] == 0 && numbers[0] == 0){
         anwser = "Error"
     } else {
-
         anwser = numbers[0]/numbers[1];
     }
-
     }
-
     if (/\d+e\-\d+/.test(String(anwser)) || /-\d+e\-\d+/.test(String(anwser))) anwser
     if(String(anwser).length >= 8 || /\d+e\-\d+/.test(String(anwser)))   anwser = anwser.toExponential(1)
     if (addOperator) expressionString = String(anwser) + operator;
@@ -295,13 +270,24 @@ function division(numbers,operator){
     
 }
 
+function changePowerAnwser(submission,operator){
+    let anwser = submission;
+    if(String(anwser).length >= 8  || /\d+e\-\d+/.test(String(anwser)))  anwser = Number(anwser).toExponential(1)
+    if (addOperator) expressionString = String(anwser) + operator;
+    else expressionString = String(anwser) + operator;
+    if(String(anwser) == "NaN") {
+        anwser = "Error"
+        expressionString = anwser;
+    }
+    screenText.textContent = expressionString;
+
+}
+
 
 
 function power(numbers,operator){
     let addOperator = false;
     let anwser = 1;
-
-
     numbers.map(value => {
         let index = 0
         if (value == "" || value == "Error"){
@@ -314,15 +300,9 @@ function power(numbers,operator){
     } else {
         anwser = Number(numbers[0]);
     }
+    changePowerAnwser(anwser,operator);
 
-    if(String(anwser).length >= 8  || /\d+e\-\d+/.test(String(anwser)))  anwser = Number(anwser).toExponential(1)
-    if (addOperator) expressionString = String(anwser) + operator;
-    else expressionString = String(anwser) + operator;
-    if(String(anwser) == "NaN") {
-        anwser = "Error"
-        expressionString = anwser;
-    }
-    screenText.textContent = expressionString;
+
 }
 
 
